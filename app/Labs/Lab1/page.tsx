@@ -1,3 +1,4 @@
+import Image from "next/image";
 export default function Lab1() {
   return (
 
@@ -63,7 +64,7 @@ My favorite books (in no particular order)
 <ul id="wd-my-books">
   <li>Dune</li>
   <li>Lord of the Rings</li>
-  <li>Ender's Game</li>
+  <li>Ender&apos;s Game</li>
   <li>Red Mars</li>
   <li>The Forever War</li>
 </ul>
@@ -156,54 +157,61 @@ Your favorite books (in no particular order)
           </tfoot>
         </table>
       </div>
-<div id="wd-images">
-  <h4>Image tag</h4>
-  Loading an image from the internet: <br />
-  <img id="wd-starship" width="400px"   src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg" />
-  <br />
-  Loading a local image:
-  <br />
-  <img id="wd-teslabot" src="/images/teslabot.jpg" height="200px" /></div>
+<Image
+  id="wd-starship"
+  src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"
+  width={400}
+  height={250} // pick an approximate height to keep aspect ratio; adjust as you like
+  alt="SpaceX Starship on launch mount"
+/>
+
+<Image
+  id="wd-teslabot"
+  src="/images/teslabot.jpg"
+  width={400}
+  height={250} // whatever your image ratio is; set correctly for best layout
+  alt="Tesla Bot concept"
+/>
 
   <div id="wd-forms">
   <h4>Form Elements</h4>
   <form id="wd-text-fields">
     <h5>Text Fields</h5>
     <label htmlFor="wd-text-fields-username">Username:</label>
-    <input placeholder="jdoe" id="wd-text-fields-username" /> <br />
+    <input placeholder="Jay" id="wd-text-fields-username" /> <br />
     <label htmlFor="wd-text-fields-password">Password:</label>
-    <input type="password" value="123@#$asd" id="wd-text-fields-password" />
+    <input type="password" defaultValue="123@#$asd" id="wd-text-fields-password" />
     <br />
     <label htmlFor="wd-text-fields-first-name">First name:</label>
     <input type="text" title="John" id="wd-text-fields-first-name" /> <br />
     <label htmlFor="wd-text-fields-last-name">Last name:</label>
     <input type="text" placeholder="Doe"
-           value="Wonderland"
+           defaultValue="Wonderland"
            title="The last name"
            id="wd-text-fields-last-name" />
     <h4>Other HTML field types</h4>
 
 <label htmlFor="wd-text-fields-email"> Email: </label>
 <input type="email"
-       placeholder="jdoe@somewhere.com"
+       placeholder="jay@somewhere.com"
        id="wd-text-fields-email"/><br/>
 
 <label htmlFor="wd-text-fields-salary-start"> Starting salary:</label>
 <input type="number"
-       value="100000"
+       defaultValue="100000"
        placeholder="1000"
        id="wd-text-fields-salary-start"/><br/>
 
 <label htmlFor="wd-text-fields-rating"> Rating: </label>
 <input type="range"
-       value="4"
+       defaultValue="4"
        max="5"
        placeholder="Doe"
        id="wd-text-fields-rating"/><br/>
 
 <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
 <input type="date"
-       value="2000-01-21"
+       defaultValue="2000-01-21"
        id="wd-text-fields-dob"/><br/>
 
 
@@ -272,10 +280,15 @@ Your favorite books (in no particular order)
    <option value="FANTASY">         Fantasy         </option>
 </select>
 
-<h4>Anchor tag</h4>
+<h4>Anchor tag 1 </h4>
 Please
-<a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
+<a href="https://www.lipsum.com" id="wd-lipsum"> click here </a>
 to get dummy text<br/>
+
+<h4>Anchor tag 2 </h4>
+Please
+<a href="https://github.com/jayaditya034/kambaz-next-js" id="wd-github"> click here </a>
+to go to Github repository<br/>
 
 </div>
 );}
