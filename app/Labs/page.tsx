@@ -3,6 +3,10 @@ export default function Labs() {
  return (
    <div id="wd-labs">
      <h1>Labs</h1>
+     <h1>Name : Jayaditya Peddisetti</h1>
+     <h1>Section : 18616</h1>
+     <h3><a href = "https://github.com/jayaditya034/kambaz-next-js" id = "wd-github">Github Repository Link</a></h3>
+     <h3><a href= "https://kambaz-next-js-jay.vercel.app/Account/Signin" id = "wd-kambaz">Kambaz</a></h3>
      <ul>
        <li>
          <Link href="/Labs/Lab1" id="wd-lab1-link">
