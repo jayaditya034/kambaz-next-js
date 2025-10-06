@@ -1,112 +1,87 @@
-// app/(Kambaz)/Courses/[cid]/Assignments/page.tsx
+"use client";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import {
+  Button,
+  InputGroup,
+  FormControl,
+  ListGroup,
+  Badge,
+} from "react-bootstrap";
+import { FaPlus, FaRegCheckCircle } from "react-icons/fa";
+import { BiSearch } from "react-icons/bi";
+import { BsGripVertical } from "react-icons/bs";
+import { IoEllipsisVertical } from "react-icons/io5";
 
-type Props = {
-  params: { cid: string };
-};
+export default function AssignmentsPage() {
+  const { cid } = useParams<{ cid: string }>();
+  const base = `/Courses/${cid}/Assignments`;
 
-export default function Assignments({ params }: Props) {
-  const base = `/Courses/${params.cid}/Assignments`;
+  const assignments = [
+    { id: "A1", title: "A1 – ENV + HTML", due: "May 13 • 11:59pm", pts: 100, avail: "Not available until May 6 • 12:00am" },
+    { id: "A2", title: "A2 – CSS + BOOTSTRAP", due: "May 20 • 11:59pm", pts: 100, avail: "Not available until May 13 • 12:00am" },
+    { id: "A3", title: "A3 – JAVASCRIPT + REACT", due: "May 27 • 11:59pm", pts: 100, avail: "Not available until May 20 • 12:00am" },
+  ];
 
   return (
-    <div id="wd-assignments">
-      <input
-        placeholder="Search for Assignments"
-        id="wd-search-assignment"
-      />
-      <button id="wd-add-assignment-group">+ Group</button>
-      <button id="wd-add-assignment">+ Assignment</button>
+    <div id="wd-assignments" className="mt-2">
+      {/* Top search + buttons */}
+      <div className="clearfix mb-3">
+        <div className="float-start" style={{ maxWidth: 420 }}>
+          <InputGroup size="lg">
+            <InputGroup.Text><BiSearch /></InputGroup.Text>
+            <FormControl placeholder="Search..." id="wd-search-assignment" />
+          </InputGroup>
+        </div>
+        <div className="float-end">
+          <Button variant="secondary" className="me-2 text-nowrap">
+            <FaPlus className="me-2" /> Group
+          </Button>
+          <Button variant="danger" className="text-nowrap" id="wd-add-assignment">
+            <FaPlus className="me-2" /> Assignment
+          </Button>
+        </div>
+      </div>
 
-      <h3 id="wd-assignments-title">
-        ASSIGNMENTS 40% of Total <button>+</button>
-      </h3>
+      {/* Group header bar */}
+      <div className="d-flex align-items-center justify-content-between border rounded px-3 py-2 bg-white">
+        <div className="d-flex align-items-center">
+          <BsGripVertical className="me-2 text-muted" />
+          <h5 className="m-0">ASSIGNMENTS</h5>
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          <Badge bg="light" text="dark" pill className="wd-badge-pill">40% of Total</Badge>
+          <Button size="sm" variant="light" className="px-2">+</Button>
+          <Button size="sm" variant="light" className="px-2"><IoEllipsisVertical /></Button>
+        </div>
+      </div>
 
-      <ul id="wd-assignment-list">
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A1`} className="wd-assignment-link">
-            A1 - ENV + HTML
-          </Link>
-          <div>Multiple Modules | Not available until May 6 at 12:00am | Due May 13 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A2`} className="wd-assignment-link">
-            A2 - CSS + BOOTSTRAP
-          </Link>
-          <div>Multiple Modules | Not available until May 13 at 12:00am | Due May 20 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A3`} className="wd-assignment-link">
-            A3 - JAVASCRIPT + REACT
-          </Link>
-          <div>Multiple Modules | Not available until May 20 at 12:00am | Due May 27 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A4`} className="wd-assignment-link">
-            A4 - STATE + REDUX
-          </Link>
-          <div>Multiple Modules | Not available until May 27 at 12:00am | Due June 3 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A5`} className="wd-assignment-link">
-            A5 - NODE + EXPRESS
-          </Link>
-          <div>Multiple Modules | Not available until June 3 at 12:00am | Due June 10 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/A6`} className="wd-assignment-link">
-            A6 - MONGODB
-          </Link>
-          <div>Multiple Modules | Not available until June 10 at 12:00am | Due June 17 at 11:59pm | 100 pts</div>
-        </li>
-      </ul>
-
-      <h3>QUIZZES 30% of Total <button>+</button></h3>
-      <ul>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Q1`} className="wd-assignment-link">
-            Q1 - HTML Quiz
-          </Link>
-          <div>Multiple Attempts | Available May 10 at 6:00pm - May 15 at 11:59pm | 50 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Q2`} className="wd-assignment-link">
-            Q2 - CSS Quiz
-          </Link>
-          <div>Multiple Attempts | Available May 17 at 6:00pm - May 22 at 11:59pm | 50 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Q3`} className="wd-assignment-link">
-            Q3 - JavaScript Quiz
-          </Link>
-          <div>Multiple Attempts | Available May 24 at 6:00pm - May 29 at 11:59pm | 50 pts</div>
-        </li>
-      </ul>
-
-      <h3>EXAMS 20% of Total <button>+</button></h3>
-      <ul>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Midterm`} className="wd-assignment-link">
-            Midterm Exam
-          </Link>
-          <div>One Attempt | Available May 31 at 6:00pm - June 2 at 11:59pm | 100 pts</div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Final`} className="wd-assignment-link">
-            Final Exam
-          </Link>
-          <div>One Attempt | Available June 14 at 6:00pm - June 17 at 11:59pm | 100 pts</div>
-        </li>
-      </ul>
-
-      <h3>PROJECT 10% of Total <button>+</button></h3>
-      <ul>
-        <li className="wd-assignment-list-item">
-          <Link href={`${base}/Project`} className="wd-assignment-link">
-            Final Project
-          </Link>
-          <div>Not available until June 1 at 12:00am | Due June 17 at 11:59pm | 100 pts</div>
-        </li>
-      </ul>
+      {/* Rows */}
+      <ListGroup className="rounded-0 mt-2">
+        {assignments.map((a) => (
+          <ListGroup.Item key={a.id} className="p-3 ps-1 wd-assignment-row">
+            <div className="d-flex align-items-start">
+              <BsGripVertical className="me-2 fs-5 text-muted flex-shrink-0" />
+              <div className="flex-fill">
+                <Link href={`${base}/${a.id}`} className="fw-semibold text-decoration-none">
+                  {a.title}
+                </Link>
+                <div className="small mt-1">
+                  <span className="text-success me-3">Multiple Modules</span>
+                  <span className="text-muted">{a.avail}</span>
+                  <span className="mx-2 text-muted">|</span>
+                  <span className="text-muted">Due {a.due}</span>
+                  <span className="mx-2 text-muted">|</span>
+                  <span className="text-muted">{a.pts} pts</span>
+                </div>
+              </div>
+              <FaRegCheckCircle className="text-success fs-5 mx-2 flex-shrink-0" />
+              <IoEllipsisVertical className="fs-4 flex-shrink-0" />
+            </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   );
 }

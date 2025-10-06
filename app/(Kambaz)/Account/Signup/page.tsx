@@ -1,13 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { FormControl } from "react-bootstrap";
+
 export default function Signup() {
   return (
-    <div id="wd-signup-screen">
-      <h3>Sign up</h3>
-      <input placeholder="username" className="wd-username" defaultValue="Jay"/><br/>
-      <input placeholder="password" type="password" className="wd-password" defaultValue="3399"/><br/>
-      <input placeholder="verify password"
-             type="password" className="wd-password-verify" defaultValue="3399"/><br/>
-      <Link  href="Profile" > Sign up </Link><br />
-      <Link  href="Signin" > Sign in </Link>
+    <div id="wd-signup-screen" style={{ maxWidth: 360 }}>
+      <h1 className="mb-3">Signup</h1>
+
+      <FormControl placeholder="username" className="mb-2" defaultValue="Jay" />
+      <FormControl placeholder="password" type="password" className="mb-2" defaultValue="3399" />
+      <FormControl placeholder="verify password" type="password" className="mb-3" defaultValue="3399" />
+
+      <Link href="/Account/Profile" className="btn btn-primary w-100 mb-2">
+        Signup
+      </Link>
+
+      <Link href="/Account/Signin" className="small">
+        Signin
+      </Link>
     </div>
-);}
+  );
+}
