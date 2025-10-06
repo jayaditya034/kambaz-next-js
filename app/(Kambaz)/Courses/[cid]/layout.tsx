@@ -1,18 +1,18 @@
+// app/(Kambaz)/Courses/[cid]/layout.tsx
 import type { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
 
-export default function CoursesLayout({
-  children,
-  params,
-}: {
+type Props = {
   children: ReactNode;
-  params: { cid: string };
-}) {
-  const { cid } = params;
+  params: Promise<{ cid: string }>; // 👈 params is a Promise in your setup
+};
+
+export default async function CoursesLayout({ children, params }: Props) {
+  const { cid } = await params;
 
   return (
     <div id="wd-courses">
-      <h2 className="text-danger">Course {cid}</h2>
+      <h2 className="text-danger">Course {cid}</h2> 
       <hr />
       <div className="d-flex">
         {/* Sidebar: hidden on < md */}
