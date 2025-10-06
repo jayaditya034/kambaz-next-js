@@ -60,7 +60,7 @@ export default function KambazNavigation() {
         className={`border-0 text-center ${isActive("/Courses") ? "bg-white" : "bg-black"}`}
       >
         <Link
-          href="/Courses"
+          href="/Courses/1234/Home"
           id="wd-course-link"
           className={`text-decoration-none ${isActive("/Courses") ? "text-danger" : "text-white"}`}
         >
