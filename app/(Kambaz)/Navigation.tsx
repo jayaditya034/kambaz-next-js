@@ -10,6 +10,14 @@ import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
 
 export default function KambazNavigation() {
   const pathname = usePathname();
+  const links = [
+    { label: "Dashboard", path: "/Dashboard", icon: AiOutlineDashboard },
+    { label: "Courses", path: "/Dashboard", icon: LiaBookSolid },
+    { label: "Calendar", path: "/Calendar", icon: IoCalendarOutline },
+    { label: "Inbox", path: "/Inbox", icon: FaInbox },
+    { label: "Labs", path: "/Labs", icon: LiaCogSolid },
+  ];
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
@@ -60,7 +68,7 @@ export default function KambazNavigation() {
         className={`border-0 text-center ${isActive("/Courses") ? "bg-white" : "bg-black"}`}
       >
         <Link
-          href="/Courses/1234/Home"
+          href="/Dashboard"
           id="wd-course-link"
           className={`text-decoration-none ${isActive("/Courses") ? "text-danger" : "text-white"}`}
         >

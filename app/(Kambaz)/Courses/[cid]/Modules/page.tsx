@@ -6,97 +6,58 @@ import ModulesControls from "./ModulesControls";
 import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
 
+import { useParams } from "next/navigation";
+// ⬇️ UPDATE THIS PATH to wherever your Database module is:
+import * as db from "../../../Database";
+
+// ---- minimal types to satisfy ESLint/TS
+type Lesson = {
+  _id: string;
+  name: string;
+  description?: string;
+  module: string;
+};
+
+type Module = {
+  _id: string;
+  name: string;
+  description?: string;
+  course: string;
+  lessons?: Lesson[];
+};
+
 export default function ModulesPage() {
+  const { cid } = useParams<{ cid: string }>();
+  const modules = (db as { modules: Module[] }).modules;
+
   return (
     <div id="wd-modules-page">
-      {/* Top controls (Collapse All, View Progress, Publish All, +Module) */}
       <ModulesControls />
-      {/* Add some vertical breathing room as in the lab */}
       <br /><br /><br />
-
       <ListGroup className="rounded-0" id="wd-modules">
-        {/* === Week 1 === */}
-        <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
-          <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" />
-            Week 1
-            <ModuleControlButtons />
-          </div>
+        {modules
+          .filter((m) => m.course === cid)
+          .map((m) => (
+            <ListGroupItem key={m._id} className="wd-module p-0 mb-5 fs-5 border-gray">
+              <div className="wd-title p-3 ps-2 bg-secondary">
+                <BsGripVertical className="me-2 fs-3" />
+                {m.name}
+                <ModuleControlButtons />
+              </div>
 
-          <ListGroup className="wd-lessons rounded-0">
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              LEARNING OBJECTIVES
-              <LessonControlButtons />
+              {m.lessons && (
+                <ListGroup className="wd-lessons rounded-0">
+                  {m.lessons.map((lesson) => (
+                    <ListGroupItem key={lesson._id} className="wd-lesson p-3 ps-1">
+                      <BsGripVertical className="me-2 fs-3" />
+                      {lesson.name}
+                      <LessonControlButtons />
+                    </ListGroupItem>
+                  ))}
+                </ListGroup>
+              )}
             </ListGroupItem>
-
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              Introduction to the course
-              <LessonControlButtons />
-            </ListGroupItem>
-
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              Learn what is Web Development
-              <LessonControlButtons />
-            </ListGroupItem>
-          </ListGroup>
-        </ListGroupItem>
-
-        {/* === Week 2 === */}
-        <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
-          <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" />
-            Week 2
-            <ModuleControlButtons />
-          </div>
-
-          <ListGroup className="wd-lessons rounded-0">
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              LEARNING OBJECTIVES
-              <LessonControlButtons />
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              LESSON 1
-              <LessonControlButtons />
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              LESSON 2
-              <LessonControlButtons />
-            </ListGroupItem>
-          </ListGroup>
-        </ListGroupItem>
-
-        {/* === Week 3 (optional extra based on your data) === */}
-        <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
-          <div className="wd-title p-3 ps-2 bg-secondary">
-            <BsGripVertical className="me-2 fs-3" />
-            Week 3
-            <ModuleControlButtons />
-          </div>
-
-          <ListGroup className="wd-lessons rounded-0">
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              LEARNING OBJECTIVES
-              <LessonControlButtons />
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              Understand CSS basics
-              <LessonControlButtons />
-            </ListGroupItem>
-            <ListGroupItem className="wd-lesson p-3 ps-1">
-              <BsGripVertical className="me-2 fs-3" />
-              Style HTML pages with CSS
-              <LessonControlButtons />
-            </ListGroupItem>
-          </ListGroup>
-        </ListGroupItem>
+          ))}
       </ListGroup>
     </div>
   );

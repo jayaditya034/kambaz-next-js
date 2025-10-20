@@ -1,0 +1,49 @@
+[
+  { "_id": "A5610-01", "title": "Project 1: Personal Portfolio (Next.js)", "course": "CS5610" },
+  { "_id": "A5610-02", "title": "Lab: REST API & Auth (Express/JWT)", "course": "CS5610" },
+  { "_id": "A5610-03", "title": "Deploy: CI/CD to Vercel/Render", "course": "CS5610" },
+
+  { "_id": "A5800-01", "title": "HW1: Greedy vs DP Proofs", "course": "CS5800" },
+  { "_id": "A5800-02", "title": "HW2: Graph Algorithms (SP/MST)", "course": "CS5800" },
+  { "_id": "A5800-03", "title": "HW3: Reductions & NP-Completeness", "course": "CS5800" },
+
+  { "_id": "A5004-01", "title": "Assignment: OOP Design & Tests (Java)", "course": "CS5004" },
+  { "_id": "A5004-02", "title": "Refactoring: Code Smells → Clean Code", "course": "CS5004" },
+  { "_id": "A5004-03", "title": "Patterns Mini-Project", "course": "CS5004" },
+
+  { "_id": "A5200-01", "title": "ER → Relational Schema + Normalization", "course": "CS5200" },
+  { "_id": "A5200-02", "title": "SQL Practice: Joins, Grouping, Indexes", "course": "CS5200" },
+  { "_id": "A5200-03", "title": "Transactions & Isolation Case Study", "course": "CS5200" },
+
+  { "_id": "A5500-01", "title": "Requirements Spec & User Stories", "course": "CS5500" },
+  { "_id": "A5500-02", "title": "Test Plan + CI Pipeline", "course": "CS5500" },
+  { "_id": "A5500-03", "title": "Milestone: Team Project Alpha", "course": "CS5500" },
+
+  { "_id": "A5600-01", "title": "C & Memory Lab (Pointers/Debugging)", "course": "CS5600" },
+  { "_id": "A5600-02", "title": "Threads & Synchronization Exercises", "course": "CS5600" },
+  { "_id": "A5600-03", "title": "Filesystem Mini-Project", "course": "CS5600" },
+
+  { "_id": "A5700-01", "title": "Sockets Programming (Client/Server)", "course": "CS5700" },
+  { "_id": "A5700-02", "title": "DNS/HTTP Trace Analysis", "course": "CS5700" },
+  { "_id": "A5700-03", "title": "Network Measurement Report", "course": "CS5700" },
+
+  { "_id": "A6650-01", "title": "Load Generator & Benchmarking", "course": "CS6650" },
+  { "_id": "A6650-02", "title": "Resilience Patterns (Retries/Circuit Breakers)", "course": "CS6650" },
+  { "_id": "A6650-03", "title": "Observability Dashboard (Logs/Metrics/Traces)", "course": "CS6650" },
+
+  { "_id": "A6240-01", "title": "MapReduce: WordCount + Inverted Index", "course": "CS6240" },
+  { "_id": "A6240-02", "title": "Spark DataFrames: Joins & Tuning", "course": "CS6240" },
+  { "_id": "A6240-03", "title": "Streaming Pipeline (Structured Streaming)", "course": "CS6240" },
+
+  { "_id": "A5680-01", "title": "MCU GPIO & Timers Lab", "course": "ECE5680" },
+  { "_id": "A5680-02", "title": "RTOS Scheduler Exercise", "course": "ECE5680" },
+  { "_id": "A5680-03", "title": "Firmware Bootloader Update Task", "course": "ECE5680" },
+
+  { "_id": "A4524-01", "title": "FFT Analysis & Windowing", "course": "ECE4524" },
+  { "_id": "A4524-02", "title": "Digital Filter Design (IIR/FIR)", "course": "ECE4524" },
+  { "_id": "A4524-03", "title": "Fixed-Point DSP Implementation", "course": "ECE4524" },
+
+  { "_id": "A2510-01", "title": "Data Structures Practice (Lists/Stacks/Queues)", "course": "CS2510" },
+  { "_id": "A2510-02", "title": "BST Implementation & Tests", "course": "CS2510" },
+  { "_id": "A2510-03", "title": "Graph Traversal (BFS/DFS)", "course": "CS2510" }
+]

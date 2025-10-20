@@ -1,0 +1,12 @@
+[
+  { "_id": "123", "firstName": "Ava",   "lastName": "Patel", "loginId": "ava123",  "section": "01", "role": "Student", "lastActivity": "Oct 15, 10:12am", "totalActivity": "3:12" },
+  { "_id": "234", "firstName": "Ben",   "lastName": "Kim",   "loginId": "ben234",  "section": "01", "role": "Student", "lastActivity": "Oct 14, 4:03pm",  "totalActivity": "1:47" },
+  { "_id": "345", "firstName": "Chloe", "lastName": "Ng",    "loginId": "chloe345","section": "02", "role": "TA",      "lastActivity": "Oct 13, 2:30pm",  "totalActivity": "6:05" },
+  { "_id": "456", "firstName": "Diego", "lastName": "Lopez", "loginId": "diego456","section": "01", "role": "Student", "lastActivity": "Oct 12, 9:10am",  "totalActivity": "2:18" },
+  { "_id": "567", "firstName": "Ella",  "lastName": "Chen",  "loginId": "ella567", "section": "02", "role": "Student", "lastActivity": "Oct 11, 11:22am", "totalActivity": "4:02" },
+  { "_id": "678", "firstName": "Farah", "lastName": "Ali",   "loginId": "farah678","section": "01", "role": "Student", "lastActivity": "Oct 10, 5:55pm",  "totalActivity": "0:53" },
+  { "_id": "789", "firstName": "Gabe",  "lastName": "Shah",  "loginId": "gabe789", "section": "02", "role": "Student", "lastActivity": "Oct 9,  8:41pm",  "totalActivity": "2:44" },
+  { "_id": "890", "firstName": "Hana",  "lastName": "Singh", "loginId": "hana890", "section": "01", "role": "Student", "lastActivity": "Oct 8,  7:03pm",  "totalActivity": "1:05" },
+  { "_id": "901", "firstName": "Ian",   "lastName": "Wu",    "loginId": "ian901",  "section": "01", "role": "Student", "lastActivity": "Oct 7,  9:20am",  "totalActivity": "0:37" },
+  { "_id": "012", "firstName": "Jia",   "lastName": "Zhao",  "loginId": "jia012",  "section": "02", "role": "Student", "lastActivity": "Oct 6,  12:10pm", "totalActivity": "5:11" }
+]

@@ -1,0 +1,409 @@
+[
+  {
+    "_id": "M5610-01",
+    "name": "Full-Stack Foundations",
+    "description": "Course overview, web basics, and developer workflow.",
+    "course": "CS5610",
+    "lessons": [
+      { "_id": "L5610-0101", "name": "Web Platform & HTTP", "description": "Browsers, servers, requests/responses.", "module": "M5610-01" },
+      { "_id": "L5610-0102", "name": "Modern Tooling", "description": "Node, npm, scripts, and project setup.", "module": "M5610-01" },
+      { "_id": "L5610-0103", "name": "TypeScript Essentials", "description": "Types, interfaces, generics.", "module": "M5610-01" }
+    ]
+  },
+  {
+    "_id": "M5610-02",
+    "name": "React/Next.js",
+    "description": "Components, routing, data fetching, state.",
+    "course": "CS5610",
+    "lessons": [
+      { "_id": "L5610-0201", "name": "Components & Props", "description": "Functional components and composition.", "module": "M5610-02" },
+      { "_id": "L5610-0202", "name": "Routing & Data", "description": "Next.js pages, dynamic routes, fetching.", "module": "M5610-02" },
+      { "_id": "L5610-0203", "name": "State Management", "description": "Context, reducers, server cache.", "module": "M5610-02" }
+    ]
+  },
+  {
+    "_id": "M5610-03",
+    "name": "APIs, Auth & Deploy",
+    "description": "Build/secure REST APIs and ship to cloud.",
+    "course": "CS5610",
+    "lessons": [
+      { "_id": "L5610-0301", "name": "Express REST", "description": "Routing, validation, errors.", "module": "M5610-03" },
+      { "_id": "L5610-0302", "name": "Auth Basics", "description": "Sessions vs JWT, OAuth, OWASP.", "module": "M5610-03" },
+      { "_id": "L5610-0303", "name": "CI/CD & Deploy", "description": "Pipelines, envs, monitoring.", "module": "M5610-03" }
+    ]
+  },
+
+  {
+    "_id": "M5800-01",
+    "name": "Algorithmic Paradigms",
+    "description": "Greedy, divide-conquer, DP, backtracking.",
+    "course": "CS5800",
+    "lessons": [
+      { "_id": "L5800-0101", "name": "Greedy Strategies", "description": "Exchange arguments and proofs.", "module": "M5800-01" },
+      { "_id": "L5800-0102", "name": "Divide & Conquer", "description": "Master theorem and recurrences.", "module": "M5800-01" },
+      { "_id": "L5800-0103", "name": "Dynamic Programming", "description": "Optimal substructure & memoization.", "module": "M5800-01" }
+    ]
+  },
+  {
+    "_id": "M5800-02",
+    "name": "Graph Algorithms",
+    "description": "Shortest paths, MST, flows.",
+    "course": "CS5800",
+    "lessons": [
+      { "_id": "L5800-0201", "name": "Traversal & Trees", "description": "BFS, DFS, topological sort.", "module": "M5800-02" },
+      { "_id": "L5800-0202", "name": "Shortest Paths", "description": "Dijkstra, Bellman-Ford, DAG SP.", "module": "M5800-02" },
+      { "_id": "L5800-0203", "name": "MST & Flows", "description": "Kruskal, Prim, Max-Flow/Min-Cut.", "module": "M5800-02" }
+    ]
+  },
+  {
+    "_id": "M5800-03",
+    "name": "Complexity & NP",
+    "description": "Reductions, NP-complete, approximation.",
+    "course": "CS5800",
+    "lessons": [
+      { "_id": "L5800-0301", "name": "Complexity Classes", "description": "P, NP, co-NP, PH overview.", "module": "M5800-03" },
+      { "_id": "L5800-0302", "name": "Reductions", "description": "Cook reductions; SAT as hub.", "module": "M5800-03" },
+      { "_id": "L5800-0303", "name": "Approx/Randomized", "description": "Greedy approx, RNC basics.", "module": "M5800-03" }
+    ]
+  },
+
+  {
+    "_id": "M5004-01",
+    "name": "Java & Testing",
+    "description": "Classes, interfaces, JUnit, immutability.",
+    "course": "CS5004",
+    "lessons": [
+      { "_id": "L5004-0101", "name": "OOP Basics", "description": "Encapsulation, constructors.", "module": "M5004-01" },
+      { "_id": "L5004-0102", "name": "Interfaces & Polymorphism", "description": "Subtype polymorphism.", "module": "M5004-01" },
+      { "_id": "L5004-0103", "name": "Testing & TDD", "description": "JUnit and test doubles.", "module": "M5004-01" }
+    ]
+  },
+  {
+    "_id": "M5004-02",
+    "name": "Design Principles",
+    "description": "SOLID, cohesion/coupling, code smells.",
+    "course": "CS5004",
+    "lessons": [
+      { "_id": "L5004-0201", "name": "SOLID", "description": "SRP, OCP, LSP, ISP, DIP.", "module": "M5004-02" },
+      { "_id": "L5004-0202", "name": "Refactoring", "description": "Smells and safe changes.", "module": "M5004-02" },
+      { "_id": "L5004-0203", "name": "Exceptions & Contracts", "description": "Design by contract.", "module": "M5004-02" }
+    ]
+  },
+  {
+    "_id": "M5004-03",
+    "name": "Patterns",
+    "description": "Creational, structural, behavioral.",
+    "course": "CS5004",
+    "lessons": [
+      { "_id": "L5004-0301", "name": "Creational", "description": "Factory, Builder, Singleton.", "module": "M5004-03" },
+      { "_id": "L5004-0302", "name": "Structural", "description": "Adapter, Decorator, Composite.", "module": "M5004-03" },
+      { "_id": "L5004-0303", "name": "Behavioral", "description": "Strategy, Observer, Visitor.", "module": "M5004-03" }
+    ]
+  },
+
+  {
+    "_id": "M5200-01",
+    "name": "Relational Modeling",
+    "description": "ER → schema, keys, normalization.",
+    "course": "CS5200",
+    "lessons": [
+      { "_id": "L5200-0101", "name": "ER Modeling", "description": "Entities, relationships, attributes.", "module": "M5200-01" },
+      { "_id": "L5200-0102", "name": "Relational Mapping", "description": "ER → tables, constraints.", "module": "M5200-01" },
+      { "_id": "L5200-0103", "name": "Normalization", "description": "1NF–BCNF, anomalies.", "module": "M5200-01" }
+    ]
+  },
+  {
+    "_id": "M5200-02",
+    "name": "SQL & Indexing",
+    "description": "Queries, joins, views, B+Trees.",
+    "course": "CS5200",
+    "lessons": [
+      { "_id": "L5200-0201", "name": "Core SQL", "description": "SELECT, joins, grouping.", "module": "M5200-02" },
+      { "_id": "L5200-0202", "name": "Views & Procedures", "description": "Views, functions, triggers.", "module": "M5200-02" },
+      { "_id": "L5200-0203", "name": "Indexing", "description": "B+Tree, hash, covering.", "module": "M5200-02" }
+    ]
+  },
+  {
+    "_id": "M5200-03",
+    "name": "Transactions & NoSQL",
+    "description": "ACID, isolation, and modern stores.",
+    "course": "CS5200",
+    "lessons": [
+      { "_id": "L5200-0301", "name": "Transactions", "description": "ACID, logs, recovery.", "module": "M5200-03" },
+      { "_id": "L5200-0302", "name": "Isolation & Concurrency", "description": "Locks, MVCC, anomalies.", "module": "M5200-03" },
+      { "_id": "L5200-0303", "name": "NoSQL Intro", "description": "KV, doc, column, graph.", "module": "M5200-03" }
+    ]
+  },
+
+  {
+    "_id": "M5500-01",
+    "name": "SE Foundations",
+    "description": "Processes, requirements, and planning.",
+    "course": "CS5500",
+    "lessons": [
+      { "_id": "L5500-0101", "name": "Lifecycle Models", "description": "Waterfall, Agile, Spiral.", "module": "M5500-01" },
+      { "_id": "L5500-0102", "name": "Requirements", "description": "Elicitation, specs, user stories.", "module": "M5500-01" },
+      { "_id": "L5500-0103", "name": "Estimating & Planning", "description": "Sizing, velocity, risk.", "module": "M5500-01" }
+    ]
+  },
+  {
+    "_id": "M5500-02",
+    "name": "Quality & Testing",
+    "description": "Test strategies, coverage, CI.",
+    "course": "CS5500",
+    "lessons": [
+      { "_id": "L5500-0201", "name": "Test Design", "description": "Unit, integration, system.", "module": "M5500-02" },
+      { "_id": "L5500-0202", "name": "Automation & CI", "description": "Pipelines and gates.", "module": "M5500-02" },
+      { "_id": "L5500-0203", "name": "Code Reviews", "description": "PR etiquette and checklists.", "module": "M5500-02" }
+    ]
+  },
+  {
+    "_id": "M5500-03",
+    "name": "DevOps & Delivery",
+    "description": "Infra-as-code, monitoring, SRE basics.",
+    "course": "CS5500",
+    "lessons": [
+      { "_id": "L5500-0301", "name": "Packaging & Releases", "description": "SemVer, artifacts.", "module": "M5500-03" },
+      { "_id": "L5500-0302", "name": "Observability", "description": "Logs, metrics, tracing.", "module": "M5500-03" },
+      { "_id": "L5500-0303", "name": "Ops Playbooks", "description": "Runbooks and incident response.", "module": "M5500-03" }
+    ]
+  },
+
+  {
+    "_id": "M5600-01",
+    "name": "C & Memory",
+    "description": "C language, pointers, memory layout.",
+    "course": "CS5600",
+    "lessons": [
+      { "_id": "L5600-0101", "name": "C Essentials", "description": "Build, debug, headers.", "module": "M5600-01" },
+      { "_id": "L5600-0102", "name": "Memory Model", "description": "Stack/heap, pointers.", "module": "M5600-01" },
+      { "_id": "L5600-0103", "name": "Tooling", "description": "GDB, valgrind basics.", "module": "M5600-01" }
+    ]
+  },
+  {
+    "_id": "M5600-02",
+    "name": "Processes & Threads",
+    "description": "Syscalls, scheduling, synchronization.",
+    "course": "CS5600",
+    "lessons": [
+      { "_id": "L5600-0201", "name": "Processes", "description": "Fork, exec, IPC.", "module": "M5600-02" },
+      { "_id": "L5600-0202", "name": "Threads", "description": "Pthreads and races.", "module": "M5600-02" },
+      { "_id": "L5600-0203", "name": "Sync Primitives", "description": "Locks, condvars, atomics.", "module": "M5600-02" }
+    ]
+  },
+  {
+    "_id": "M5600-03",
+    "name": "Perf & Filesystems",
+    "description": "Caches, I/O, FS design.",
+    "course": "CS5600",
+    "lessons": [
+      { "_id": "L5600-0301", "name": "Caching", "description": "Locality, cache-friendly code.", "module": "M5600-03" },
+      { "_id": "L5600-0302", "name": "I/O & Sockets", "description": "Blocking vs async.", "module": "M5600-03" },
+      { "_id": "L5600-0303", "name": "Filesystems", "description": "Inodes, journaling.", "module": "M5600-03" }
+    ]
+  },
+
+  {
+    "_id": "M5700-01",
+    "name": "Networking Layers",
+    "description": "Link, network, transport, app.",
+    "course": "CS5700",
+    "lessons": [
+      { "_id": "L5700-0101", "name": "Link Layer", "description": "Ethernet, ARP, switching.", "module": "M5700-01" },
+      { "_id": "L5700-0102", "name": "IP & Routing", "description": "IPv4/6, CIDR, routing.", "module": "M5700-01" },
+      { "_id": "L5700-0103", "name": "TCP/UDP", "description": "Congestion & reliability.", "module": "M5700-01" }
+    ]
+  },
+  {
+    "_id": "M5700-02",
+    "name": "Apps & DNS/HTTP",
+    "description": "Name resolution and the web.",
+    "course": "CS5700",
+    "lessons": [
+      { "_id": "L5700-0201", "name": "DNS", "description": "Resolution, caching, records.", "module": "M5700-02" },
+      { "_id": "L5700-0202", "name": "HTTP/2+/TLS", "description": "Transport for the web.", "module": "M5700-02" },
+      { "_id": "L5700-0203", "name": "Sockets Intro", "description": "Client/server sockets.", "module": "M5700-02" }
+    ]
+  },
+  {
+    "_id": "M5700-03",
+    "name": "Measurements",
+    "description": "Congestion control and perf testing.",
+    "course": "CS5700",
+    "lessons": [
+      { "_id": "L5700-0301", "name": "AIMD & CC", "description": "Reno, CUBIC, BBR.", "module": "M5700-03" },
+      { "_id": "L5700-0302", "name": "Traffic Gen", "description": "Load testing basics.", "module": "M5700-03" },
+      { "_id": "L5700-0303", "name": "Tracing & Logs", "description": "pcap, tcpdump, logs.", "module": "M5700-03" }
+    ]
+  },
+
+  {
+    "_id": "M6650-01",
+    "name": "Scalable Architectures",
+    "description": "Stateless, stateful, microservices.",
+    "course": "CS6650",
+    "lessons": [
+      { "_id": "L6650-0101", "name": "Service Design", "description": "Contracts, idempotency.", "module": "M6650-01" },
+      { "_id": "L6650-0102", "name": "Queues & Streams", "description": "Async backpressure.", "module": "M6650-01" },
+      { "_id": "L6650-0103", "name": "Caching", "description": "CDN, app, DB caches.", "module": "M6650-01" }
+    ]
+  },
+  {
+    "_id": "M6650-02",
+    "name": "Load & Resilience",
+    "description": "Load gen, autoscaling, fault tolerance.",
+    "course": "CS6650",
+    "lessons": [
+      { "_id": "L6650-0201", "name": "Load Generation", "description": "Open vs closed models.", "module": "M6650-02" },
+      { "_id": "L6650-0202", "name": "Autoscaling", "description": "HPA, target tracking.", "module": "M6650-02" },
+      { "_id": "L6650-0203", "name": "Resilience Patterns", "description": "Retries, circuit breakers.", "module": "M6650-02" }
+    ]
+  },
+  {
+    "_id": "M6650-03",
+    "name": "Observability",
+    "description": "Metrics, traces, SLOs, error budgets.",
+    "course": "CS6650",
+    "lessons": [
+      { "_id": "L6650-0301", "name": "Metrics & Tracing", "description": "Cardinality & sampling.", "module": "M6650-03" },
+      { "_id": "L6650-0302", "name": "Logging", "description": "Structured logs and context.", "module": "M6650-03" },
+      { "_id": "L6650-0303", "name": "SLOs & Alerts", "description": "SLIs and alert tuning.", "module": "M6650-03" }
+    ]
+  },
+
+  {
+    "_id": "M6240-01",
+    "name": "Distributed Paradigms",
+    "description": "MapReduce and Spark fundamentals.",
+    "course": "CS6240",
+    "lessons": [
+      { "_id": "L6240-0101", "name": "MR Model", "description": "Map, shuffle, reduce.", "module": "M6240-01" },
+      { "_id": "L6240-0102", "name": "Spark Core", "description": "RDDs, transformations, actions.", "module": "M6240-01" },
+      { "_id": "L6240-0103", "name": "DataFrames", "description": "Catalyst and Tungsten.", "module": "M6240-01" }
+    ]
+  },
+  {
+    "_id": "M6240-02",
+    "name": "Performance & Tuning",
+    "description": "Partitioning, caching, joins.",
+    "course": "CS6240",
+    "lessons": [
+      { "_id": "L6240-0201", "name": "Shuffles & Skew", "description": "Avoiding hotspots.", "module": "M6240-02" },
+      { "_id": "L6240-0202", "name": "Storage Formats", "description": "Parquet, ORC, compression.", "module": "M6240-02" },
+      { "_id": "L6240-0203", "name": "Cluster Tuning", "description": "Executors, memory, parallelism.", "module": "M6240-02" }
+    ]
+  },
+  {
+    "_id": "M6240-03",
+    "name": "Streaming & ML",
+    "description": "Structured streaming and ML at scale.",
+    "course": "CS6240",
+    "lessons": [
+      { "_id": "L6240-0301", "name": "Streaming 101", "description": "Micro-batch, watermarking.", "module": "M6240-03" },
+      { "_id": "L6240-0302", "name": "Feature Pipelines", "description": "ETL for ML at scale.", "module": "M6240-03" },
+      { "_id": "L6240-0303", "name": "Serving & Batch", "description": "Lambda/Kappa patterns.", "module": "M6240-03" }
+    ]
+  },
+
+  {
+    "_id": "M5680-01",
+    "name": "MCUs & I/O",
+    "description": "Microcontroller basics and peripherals.",
+    "course": "ECE5680",
+    "lessons": [
+      { "_id": "L5680-0101", "name": "MCU Architecture", "description": "Cores, buses, interrupts.", "module": "M5680-01" },
+      { "_id": "L5680-0102", "name": "Digital I/O", "description": "GPIO, debouncing.", "module": "M5680-01" },
+      { "_id": "L5680-0103", "name": "Serial Buses", "description": "I2C, SPI, UART.", "module": "M5680-01" }
+    ]
+  },
+  {
+    "_id": "M5680-02",
+    "name": "RT Constraints",
+    "description": "Timers, RTOS, scheduling.",
+    "course": "ECE5680",
+    "lessons": [
+      { "_id": "L5680-0201", "name": "Timers & PWM", "description": "Precise timing control.", "module": "M5680-02" },
+      { "_id": "L5680-0202", "name": "RTOS Basics", "description": "Tasks, queues, ISRs.", "module": "M5680-02" },
+      { "_id": "L5680-0203", "name": "Latency & Jitter", "description": "Measurement and tuning.", "module": "M5680-02" }
+    ]
+  },
+  {
+    "_id": "M5680-03",
+    "name": "Firmware Loops",
+    "description": "Drivers, HAL, and testing.",
+    "course": "ECE5680",
+    "lessons": [
+      { "_id": "L5680-0301", "name": "Drivers & HAL", "description": "Abstractions for portability.", "module": "M5680-03" },
+      { "_id": "L5680-0302", "name": "Bootloaders", "description": "Updating and safety.", "module": "M5680-03" },
+      { "_id": "L5680-0303", "name": "HIL Testing", "description": "Harnesses and fixtures.", "module": "M5680-03" }
+    ]
+  },
+
+  {
+    "_id": "M4524-01",
+    "name": "Signals & Sampling",
+    "description": "CT/DT signals, aliasing, Nyquist.",
+    "course": "ECE4524",
+    "lessons": [
+      { "_id": "L4524-0101", "name": "Signals & Systems", "description": "LTI, convolution.", "module": "M4524-01" },
+      { "_id": "L4524-0102", "name": "Sampling Theory", "description": "Nyquist, reconstruction.", "module": "M4524-01" },
+      { "_id": "L4524-0103", "name": "Quantization", "description": "SNR and resolution.", "module": "M4524-01" }
+    ]
+  },
+  {
+    "_id": "M4524-02",
+    "name": "Frequency Domain",
+    "description": "DFT/FFT and spectral analysis.",
+    "course": "ECE4524",
+    "lessons": [
+      { "_id": "L4524-0201", "name": "DFT & FFT", "description": "Radix-2, complexity.", "module": "M4524-02" },
+      { "_id": "L4524-0202", "name": "Windows & Leakage", "description": "Hann, Hamming, Blackman.", "module": "M4524-02" },
+      { "_id": "L4524-0203", "name": "Spectral Estimation", "description": "Periodogram, Welch.", "module": "M4524-02" }
+    ]
+  },
+  {
+    "_id": "M4524-03",
+    "name": "Digital Filters",
+    "description": "IIR/FIR design and implementation.",
+    "course": "ECE4524",
+    "lessons": [
+      { "_id": "L4524-0301", "name": "Filter Basics", "description": "Responses and specs.", "module": "M4524-03" },
+      { "_id": "L4524-0302", "name": "IIR/FIR Design", "description": "Butterworth, windowing.", "module": "M4524-03" },
+      { "_id": "L4524-0303", "name": "Fixed-Point DSP", "description": "Scaling and overflow.", "module": "M4524-03" }
+    ]
+  },
+
+  {
+    "_id": "M2510-01",
+    "name": "Lists & Recursion",
+    "description": "Linked lists, stacks, queues.",
+    "course": "CS2510",
+    "lessons": [
+      { "_id": "L2510-0101", "name": "List ADTs", "description": "Interfaces and invariants.", "module": "M2510-01" },
+      { "_id": "L2510-0102", "name": "Recursion", "description": "Design recipes.", "module": "M2510-01" },
+      { "_id": "L2510-0103", "name": "Iterators", "description": "Traversal patterns.", "module": "M2510-01" }
+    ]
+  },
+  {
+    "_id": "M2510-02",
+    "name": "Trees & BSTs",
+    "description": "Binary trees, BST ops, balance.",
+    "course": "CS2510",
+    "lessons": [
+      { "_id": "L2510-0201", "name": "Binary Trees", "description": "Design and traversal.", "module": "M2510-02" },
+      { "_id": "L2510-0202", "name": "BST Operations", "description": "Insert, search, delete.", "module": "M2510-02" },
+      { "_id": "L2510-0203", "name": "AVL Basics", "description": "Rotations and height.", "module": "M2510-02" }
+    ]
+  },
+  {
+    "_id": "M2510-03",
+    "name": "Graphs & Testing",
+    "description": "Graph reps and unit tests.",
+    "course": "CS2510",
+    "lessons": [
+      { "_id": "L2510-0301", "name": "Graph Models", "description": "Adjacency structures.", "module": "M2510-03" },
+      { "_id": "L2510-0302", "name": "Search", "description": "BFS/DFS patterns.", "module": "M2510-03" },
+      { "_id": "L2510-0303", "name": "Testing", "description": "TDD for DS/Algos.", "module": "M2510-03" }
+    ]
+  }
+]

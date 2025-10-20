@@ -1,30 +1,33 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaCalendarAlt } from "react-icons/fa";
 
+// ✅ Database import (extra "../" because we're one level deeper)
+import * as db from "../../../../Database";
+
+type Assignment = {
+  _id: string;
+  title: string;
+  course: string;
+  description?: string;
+  points?: number;
+  due?: string;         // e.g., "May 13, 2024, 11:59 PM"
+  availableFrom?: string;
+  available?: string;   // short banner string if you prefer
+};
+
 export default function EditAssignmentPage() {
-  const { aid } = useParams<{ aid: string }>();
+  const { cid, aid } = useParams<{ cid: string; aid: string }>();
+  const all = (db as { assignments: Assignment[] }).assignments || [];
+  const a = all.find((x) => x._id === aid);
 
-  return (
-    <div id="wd-assignments-editor" className="container mt-4">
-      {/* Assignment name */}
-      <div className="mb-3">
-        <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input
-          id="wd-name"
-          className="form-control"
-          defaultValue={aid ?? "A1"}
-        />
-      </div>
-
-      {/* Description */}
-      <div className="mb-3">
-        <textarea
-          id="wd-description"
-          className="form-control"
-          rows={10}
-          defaultValue={`The assignment is available online
+  // reasonable fallbacks so the UI still renders
+  const title = a?.title ?? aid ?? "Assignment";
+  const description =
+    a?.description ??
+    `The assignment is available online
 
 Submit a link to the landing page of your Web application running on Netlify.
 
@@ -35,15 +38,29 @@ The landing page should include the following:
 • Link to the Kanbas application
 • Links to all relevant source code repositories
 
-The Kanbas application should include a link to navigate back to the landing page.`}
-        />
+The Kanbas application should include a link to navigate back to the landing page.`;
+  const points = a?.points ?? 100;
+  const dueFull = a?.due ?? "May 13, 2024, 11:59 PM";
+  const availFrom = a?.availableFrom ?? "May 6, 2024, 12:00 AM";
+
+  return (
+    <div id="wd-assignments-editor" className="container mt-4">
+      {/* Assignment name */}
+      <div className="mb-3">
+        <label htmlFor="wd-name" className="form-label">Assignment Name</label>
+        <input id="wd-name" className="form-control" defaultValue={title} />
+      </div>
+
+      {/* Description */}
+      <div className="mb-3">
+        <textarea id="wd-description" className="form-control" rows={10} defaultValue={description} />
       </div>
 
       {/* Points */}
       <div className="row mb-3">
         <label htmlFor="wd-points" className="col-md-3 col-form-label text-end">Points</label>
         <div className="col-md-9">
-          <input id="wd-points" className="form-control" defaultValue={100} />
+          <input id="wd-points" className="form-control" defaultValue={points} />
         </div>
       </div>
 
@@ -82,31 +99,12 @@ The Kanbas application should include a link to navigate back to the landing pag
 
             <div>
               <label className="form-label fw-bold">Online Entry Options</label>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="wd-text-entry" />
-                <label htmlFor="wd-text-entry" className="form-check-label">Text Entry</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="wd-website-url" defaultChecked />
-                <label htmlFor="wd-website-url" className="form-check-label">Website URL</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="wd-media-recordings" />
-                <label htmlFor="wd-media-recordings" className="form-check-label">Media Recordings</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="wd-student-annotation" />
-                <label htmlFor="wd-student-annotation" className="form-check-label">Student Annotation</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input" id="wd-file-upload" />
-                <label htmlFor="wd-file-upload" className="form-check-label">File Uploads</label>
-              </div>
+              {["Text Entry", "Website URL", "Media Recordings", "Student Annotation", "File Uploads"].map((label, i) => (
+                <div className="form-check" key={i}>
+                  <input type="checkbox" className="form-check-input" id={`wd-opt-${i}`} defaultChecked={label === "Website URL"} />
+                  <label htmlFor={`wd-opt-${i}`} className="form-check-label">{label}</label>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -132,12 +130,7 @@ The Kanbas application should include a link to navigate back to the landing pag
             <div className="mb-3">
               <label htmlFor="wd-due-date" className="form-label">Due</label>
               <div className="input-group">
-                <input
-                  type="text"
-                  id="wd-due-date"
-                  className="form-control"
-                  defaultValue="May 13, 2024, 11:59 PM"
-                />
+                <input type="text" id="wd-due-date" className="form-control" defaultValue={dueFull} />
                 <span className="input-group-text"><FaCalendarAlt /></span>
               </div>
             </div>
@@ -147,24 +140,14 @@ The Kanbas application should include a link to navigate back to the landing pag
               <div className="col-md-6 mb-3">
                 <label htmlFor="wd-available-from" className="form-label">Available from</label>
                 <div className="input-group">
-                  <input
-                    type="text"
-                    id="wd-available-from"
-                    className="form-control"
-                    defaultValue="May 6, 2024, 12:00 AM"
-                  />
+                  <input type="text" id="wd-available-from" className="form-control" defaultValue={availFrom} />
                   <span className="input-group-text"><FaCalendarAlt /></span>
                 </div>
               </div>
               <div className="col-md-6 mb-3">
                 <label htmlFor="wd-available-until" className="form-label">Until</label>
                 <div className="input-group">
-                  <input
-                    type="text"
-                    id="wd-available-until"
-                    className="form-control"
-                    defaultValue=""
-                  />
+                  <input type="text" id="wd-available-until" className="form-control" defaultValue="" />
                   <span className="input-group-text"><FaCalendarAlt /></span>
                 </div>
               </div>
@@ -175,10 +158,10 @@ The Kanbas application should include a link to navigate back to the landing pag
 
       <hr />
 
-      {/* Footer actions (Cancel, Save) */}
+      {/* Footer actions (Cancel, Save) – navigate back to course assignments */}
       <div className="d-flex justify-content-end">
-        <button className="btn btn-secondary me-2">Cancel</button>
-        <button className="btn btn-danger">Save</button>
+        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-danger">Save</Link>
       </div>
     </div>
   );

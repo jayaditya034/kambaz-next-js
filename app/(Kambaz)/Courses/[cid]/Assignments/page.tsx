@@ -14,15 +14,26 @@ import { BiSearch } from "react-icons/bi";
 import { BsGripVertical } from "react-icons/bs";
 import { IoEllipsisVertical } from "react-icons/io5";
 
+// ✅ pull assignments from the Database
+import * as db from "../../../Database";
+
+// ---- lightweight types
+type Assignment = {
+  _id: string;            // e.g., "A5610-01"
+  title: string;
+  course: string;         // e.g., "CS5610"
+  description?: string;
+  points?: number;
+  due?: string;           // free-form like "May 13 • 11:59pm"
+  available?: string;     // free-form like "Not available until …"
+};
+
 export default function AssignmentsPage() {
   const { cid } = useParams<{ cid: string }>();
   const base = `/Courses/${cid}/Assignments`;
 
-  const assignments = [
-    { id: "A1", title: "A1 – ENV + HTML", due: "May 13 • 11:59pm", pts: 100, avail: "Not available until May 6 • 12:00am" },
-    { id: "A2", title: "A2 – CSS + BOOTSTRAP", due: "May 20 • 11:59pm", pts: 100, avail: "Not available until May 13 • 12:00am" },
-    { id: "A3", title: "A3 – JAVASCRIPT + REACT", due: "May 27 • 11:59pm", pts: 100, avail: "Not available until May 20 • 12:00am" },
-  ];
+  const all = (db as { assignments: Assignment[] }).assignments || [];
+  const assignments = all.filter((a) => a.course === cid);
 
   return (
     <div id="wd-assignments" className="mt-2">
@@ -60,20 +71,20 @@ export default function AssignmentsPage() {
       {/* Rows */}
       <ListGroup className="rounded-0 mt-2">
         {assignments.map((a) => (
-          <ListGroup.Item key={a.id} className="p-3 ps-1 wd-assignment-row">
+          <ListGroup.Item key={a._id} className="p-3 ps-1 wd-assignment-row">
             <div className="d-flex align-items-start">
               <BsGripVertical className="me-2 fs-5 text-muted flex-shrink-0" />
               <div className="flex-fill">
-                <Link href={`${base}/${a.id}`} className="fw-semibold text-decoration-none">
+                <Link href={`${base}/${a._id}`} className="fw-semibold text-decoration-none">
                   {a.title}
                 </Link>
                 <div className="small mt-1">
                   <span className="text-success me-3">Multiple Modules</span>
-                  <span className="text-muted">{a.avail}</span>
+                  <span className="text-muted">{a.available ?? "Available now"}</span>
                   <span className="mx-2 text-muted">|</span>
-                  <span className="text-muted">Due {a.due}</span>
+                  <span className="text-muted">Due {a.due ?? "TBD"}</span>
                   <span className="mx-2 text-muted">|</span>
-                  <span className="text-muted">{a.pts} pts</span>
+                  <span className="text-muted">{a.points ?? 100} pts</span>
                 </div>
               </div>
               <FaRegCheckCircle className="text-success fs-5 mx-2 flex-shrink-0" />

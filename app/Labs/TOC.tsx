@@ -15,6 +15,7 @@ export default function TOC() {
           href="/Labs"
           id="wd-lab1-link"
           eventKey="/Labs"
+           className={`nav-link ${pathname.endsWith("Labs") ? "active" : ""}`}
         >
           Home
         </Nav.Link>
@@ -26,6 +27,7 @@ export default function TOC() {
           href="/Labs/Lab1"
           id="wd-lab1-link"
           eventKey="/Labs/Lab1"
+           className={`nav-link ${pathname.endsWith("Lab1") ? "active" : ""}`}
         >
           Lab 1
         </Nav.Link>
@@ -37,6 +39,7 @@ export default function TOC() {
           href="/Labs/Lab2"
           id="wd-lab2-link"
           eventKey="/Labs/Lab2"
+          className={`nav-link ${pathname.endsWith("Lab2") ? "active" : ""}`}
         >
           Lab 2
         </Nav.Link>
@@ -48,6 +51,7 @@ export default function TOC() {
           href="/Labs/Lab3"
           id="wd-lab3-link"
           eventKey="/Labs/Lab3"
+           className={`nav-link ${pathname.endsWith("Lab3") ? "active" : ""}`}
         >
           Lab 3
         </Nav.Link>

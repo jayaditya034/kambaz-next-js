@@ -1,0 +1,122 @@
+[
+  {
+    "_id": "CS5610",
+    "name": "Web Development",
+    "number": "CS5610",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Modern full-stack web development with React/Next.js, Node, REST, and deployment."
+  },
+  {
+    "_id": "CS5800",
+    "name": "Algorithms",
+    "number": "CS5800",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Design and analysis of algorithms: greedy, divide-and-conquer, DP, graphs, NP-completeness."
+  },
+  {
+    "_id": "CS5004",
+    "name": "Object-Oriented Design",
+    "number": "CS5004",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "OOP in Java: interfaces, polymorphism, testing, code smells, refactoring, and design patterns."
+  },
+  {
+    "_id": "CS5200",
+    "name": "Database Management Systems",
+    "number": "CS5200",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Relational modeling, SQL, transactions, indexing, and intro to NoSQL/data modeling."
+  },
+  {
+    "_id": "CS5500",
+    "name": "Foundations of Software Engineering",
+    "number": "CS5500",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Team-based software projects: requirements, design, CI/CD, testing, and code reviews."
+  },
+  {
+    "_id": "CS5600",
+    "name": "Computer Systems",
+    "number": "CS5600",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Architecture to OS interfaces: C, memory, processes, concurrency, and performance."
+  },
+  {
+    "_id": "CS5700",
+    "name": "Fundamentals of Computer Networking",
+    "number": "CS5700",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Network layers, TCP/IP, routing, congestion control, DNS/HTTP, and socket programming."
+  },
+  {
+    "_id": "CS6650",
+    "name": "Building Scalable Distributed Systems",
+    "number": "CS6650",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Scalable services, load generation, cloud deployment, and performance measurement."
+  },
+  {
+    "_id": "CS6240",
+    "name": "Parallel Data Processing",
+    "number": "CS6240",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Distributed/parallel data processing with MapReduce/Spark and large-scale analytics."
+  },
+  {
+    "_id": "ECE5680",
+    "name": "Embedded Systems",
+    "number": "ECE5680",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "ECE",
+    "credits": 4,
+    "description": "Microcontrollers, I/O, real-time constraints, and firmware for hardware-in-the-loop."
+  },
+  {
+    "_id": "ECE4524",
+    "name": "Digital Signal Processing",
+    "number": "ECE4524",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "ECE",
+    "credits": 4,
+    "description": "Signals, systems, sampling, FFTs, digital filters, and practical DSP applications."
+  },
+  {
+    "_id": "CS2510",
+    "name": "Fundamentals of Computer Science 2",
+    "number": "CS2510",
+    "startDate": "2025-09-01",
+    "endDate": "2025-12-15",
+    "department": "Khoury",
+    "credits": 4,
+    "description": "Data structures and testing in Java: lists, trees, BSTs, graphs, and test-driven design."
+  }
+]
