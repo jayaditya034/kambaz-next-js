@@ -7,11 +7,12 @@ import Breadcrumb from "./Breadcrumb";
 
 type Props = {
   children: ReactNode;
-  params: { cid: string };
+  // Match your project's generated LayoutProps: params is a Promise
+  params: Promise<{ cid: string }>;
 };
 
-export default function CoursesLayout({ children, params }: Props) {
-  const { cid } = params;
+export default async function CoursesLayout({ children, params }: Props) {
+  const { cid } = await params;
   const course = courses.find((c: { _id: string }) => c._id === cid);
 
   return (
