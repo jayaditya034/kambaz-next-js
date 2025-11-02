@@ -45,5 +45,33 @@
 
   { "_id": "34", "user": "456", "course": "CS2510" },
   { "_id": "35", "user": "567", "course": "CS2510" },
-  { "_id": "36", "user": "678", "course": "CS2510" }
+  { "_id": "36", "user": "678", "course": "CS2510" },
+
+{ "_id": "37", "user": "u-jay", "course": "CS5610" },
+{ "_id": "38", "user": "u-jay", "course": "CS5800" },
+{ "_id": "39", "user": "u-jay", "course": "CS5004" },
+{ "_id": "40", "user": "u-jay", "course": "CS5200" },
+{ "_id": "41", "user": "u-jay", "course": "CS5500" },
+{ "_id": "42", "user": "u-jay", "course": "CS5600" },
+{ "_id": "43", "user": "u-jay", "course": "CS5700" },
+{ "_id": "44", "user": "u-jay", "course": "CS6650" },
+{ "_id": "45", "user": "u-jay", "course": "CS6240" },
+{ "_id": "46", "user": "u-jay", "course": "ECE5680" },
+{ "_id": "47", "user": "u-jay", "course": "ECE4524" },
+{ "_id": "48", "user": "u-jay", "course": "CS2510" },
+
+{ "_id": "49", "user": "u-alice", "course": "CS5610" },
+{ "_id": "50", "user": "u-alice", "course": "CS5800" },
+{ "_id": "51", "user": "u-alice", "course": "CS5004" },
+{ "_id": "52", "user": "u-alice", "course": "CS5200" },
+{ "_id": "53", "user": "u-alice", "course": "CS5500" },
+{ "_id": "54", "user": "u-alice", "course": "CS5600" },
+{ "_id": "55", "user": "u-alice", "course": "CS5700" },
+{ "_id": "56", "user": "u-alice", "course": "CS6650" },
+{ "_id": "57", "user": "u-alice", "course": "CS6240" },
+{ "_id": "58", "user": "u-alice", "course": "ECE5680" },
+{ "_id": "59", "user": "u-alice", "course": "ECE4524" },
+{ "_id": "60", "user": "u-alice", "course": "CS2510" }
+
+
 ]

@@ -1,3 +1,5 @@
+"use client";
+
 // app/Labs/Lab3/page.tsx
 import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
@@ -32,11 +34,29 @@ import Highlight from "./Highlight";
 import PathParameters from "./PathParameters";
 import TodoList from "./todos/TodoList";
 
+import { useSelector } from "react-redux";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import type { RootState } from "../store"; // <- typed store
+import type { Todo } from "../Lab4/ReduxExamples/todos/todosReducer"; // <- typed todo
+
 export default function Lab3() {
   console.log("Hello World!");
+
+  // ✅ typed selector — no `any`
+  const todos = useSelector((state: RootState) => state.todosReducer.todos);
+
   return (
     <div id="wd-lab3" className="container">
       <h3>Lab 3</h3>
+
+      {/* Textbook demo: display todos selected from Redux */}
+      <ListGroup>
+        {todos.map((todo: Todo) => (
+          <ListGroupItem key={todo.id}>{todo.title}</ListGroupItem>
+        ))}
+      </ListGroup>
+      <hr />
+
       <VariablesAndConstants />
       <VariableTypes />
       <BooleanVariables />

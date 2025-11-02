@@ -13,9 +13,9 @@ export default function TOC() {
         <Nav.Link
           as={Link}
           href="/Labs"
-          id="wd-lab1-link"
+          id="wd-labs-home-link"
           eventKey="/Labs"
-           className={`nav-link ${pathname.endsWith("Labs") ? "active" : ""}`}
+          className={`nav-link ${pathname.endsWith("Labs") ? "active" : ""}`}
         >
           Home
         </Nav.Link>
@@ -27,7 +27,7 @@ export default function TOC() {
           href="/Labs/Lab1"
           id="wd-lab1-link"
           eventKey="/Labs/Lab1"
-           className={`nav-link ${pathname.endsWith("Lab1") ? "active" : ""}`}
+          className={`nav-link ${pathname.endsWith("Lab1") ? "active" : ""}`}
         >
           Lab 1
         </Nav.Link>
@@ -51,7 +51,7 @@ export default function TOC() {
           href="/Labs/Lab3"
           id="wd-lab3-link"
           eventKey="/Labs/Lab3"
-           className={`nav-link ${pathname.endsWith("Lab3") ? "active" : ""}`}
+          className={`nav-link ${pathname.endsWith("Lab3") ? "active" : ""}`}
         >
           Lab 3
         </Nav.Link>
@@ -60,10 +60,17 @@ export default function TOC() {
       <Nav.Item>
         <Nav.Link
           as={Link}
-          href="/"
-          id="wd-lab3-link"
-          eventKey="/"
+          href="/Labs/Lab4"
+          id="wd-lab4-link"
+          eventKey="/Labs/Lab4"
+          className={`nav-link ${pathname.endsWith("Lab4") ? "active" : ""}`}
         >
+          Lab 4
+        </Nav.Link>
+      </Nav.Item>
+
+      <Nav.Item>
+        <Nav.Link as={Link} href="/" id="wd-kambaz-link" eventKey="/">
           Kambaz
         </Nav.Link>
       </Nav.Item>

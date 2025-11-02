@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   Button,
   InputGroup,
@@ -9,35 +9,33 @@ import {
   ListGroup,
   Badge,
 } from "react-bootstrap";
-import { FaPlus, FaRegCheckCircle } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { BsGripVertical } from "react-icons/bs";
 import { IoEllipsisVertical } from "react-icons/io5";
-
-// ✅ pull assignments from the Database
-import * as db from "../../../Database";
-
-// ---- lightweight types
-type Assignment = {
-  _id: string;            // e.g., "A5610-01"
-  title: string;
-  course: string;         // e.g., "CS5610"
-  description?: string;
-  points?: number;
-  due?: string;           // free-form like "May 13 • 11:59pm"
-  available?: string;     // free-form like "Not available until …"
-};
+import { FaPlus, FaRegCheckCircle, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../../store";
+import { deleteAssignment, type Assignment } from "../Assignments/reducer";
 
 export default function AssignmentsPage() {
+  const router = useRouter();
   const { cid } = useParams<{ cid: string }>();
   const base = `/Courses/${cid}/Assignments`;
 
-  const all = (db as { assignments: Assignment[] }).assignments || [];
-  const assignments = all.filter((a) => a.course === cid);
+  const dispatch = useDispatch();
+  const { assignments } = useSelector(
+    (s: RootState) => s.assignmentsReducer
+  );
+  const { currentUser } = useSelector(
+    (s: RootState) => s.accountReducer
+  );
+  const isFaculty = currentUser?.role === "FACULTY"|| currentUser?.role === "ADMIN";
+
+  const courseAssignments: Assignment[] = assignments.filter(a => a.course === cid);
 
   return (
     <div id="wd-assignments" className="mt-2">
-      {/* Top search + buttons */}
+      {/* Top bar */}
       <div className="clearfix mb-3">
         <div className="float-start" style={{ maxWidth: 420 }}>
           <InputGroup size="lg">
@@ -46,36 +44,47 @@ export default function AssignmentsPage() {
           </InputGroup>
         </div>
         <div className="float-end">
-          <Button variant="secondary" className="me-2 text-nowrap">
+          <Button variant="secondary" className="me-2 text-nowrap" disabled>
             <FaPlus className="me-2" /> Group
           </Button>
-          <Button variant="danger" className="text-nowrap" id="wd-add-assignment">
-            <FaPlus className="me-2" /> Assignment
-          </Button>
+
+          {isFaculty && (
+            <Button
+              variant="danger"
+              className="text-nowrap"
+              id="wd-add-assignment"
+              onClick={() => router.push(`${base}/new`)}
+            >
+              <FaPlus className="me-2" /> Assignment
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Group header bar */}
+      {/* Group header */}
       <div className="d-flex align-items-center justify-content-between border rounded px-3 py-2 bg-white">
         <div className="d-flex align-items-center">
           <BsGripVertical className="me-2 text-muted" />
           <h5 className="m-0">ASSIGNMENTS</h5>
         </div>
         <div className="d-flex align-items-center gap-2">
-          <Badge bg="light" text="dark" pill className="wd-badge-pill">40% of Total</Badge>
-          <Button size="sm" variant="light" className="px-2">+</Button>
+          <Badge bg="light" text="dark" pill>40% of Total</Badge>
+          <Button size="sm" variant="light" className="px-2" disabled>+</Button>
           <Button size="sm" variant="light" className="px-2"><IoEllipsisVertical /></Button>
         </div>
       </div>
 
       {/* Rows */}
       <ListGroup className="rounded-0 mt-2">
-        {assignments.map((a) => (
+        {courseAssignments.map((a) => (
           <ListGroup.Item key={a._id} className="p-3 ps-1 wd-assignment-row">
             <div className="d-flex align-items-start">
               <BsGripVertical className="me-2 fs-5 text-muted flex-shrink-0" />
               <div className="flex-fill">
-                <Link href={`${base}/${a._id}`} className="fw-semibold text-decoration-none">
+                <Link
+                  href={`${base}/${a._id}`}
+                  className="fw-semibold text-decoration-none"
+                >
                   {a.title}
                 </Link>
                 <div className="small mt-1">
@@ -87,7 +96,21 @@ export default function AssignmentsPage() {
                   <span className="text-muted">{a.points ?? 100} pts</span>
                 </div>
               </div>
+
               <FaRegCheckCircle className="text-success fs-5 mx-2 flex-shrink-0" />
+              {isFaculty && (
+                <Button
+                  variant="link"
+                  className="text-danger p-0 ms-2 flex-shrink-0"
+                  title="Delete"
+                  onClick={() =>
+                    confirm("Delete this assignment?") &&
+                    dispatch(deleteAssignment({ _id: a._id }))
+                  }
+                >
+                  <FaTrash />
+                </Button>
+              )}
               <IoEllipsisVertical className="fs-4 flex-shrink-0" />
             </div>
           </ListGroup.Item>

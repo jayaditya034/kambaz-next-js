@@ -1,14 +1,19 @@
+// app/(Kambaz)/Courses/[cid]/Modules/page.tsx
 "use client";
 
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { useState } from "react";
+import { ListGroup, ListGroupItem, FormControl } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import ModulesControls from "./ModulesControls";
 import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
-
+import GreenCheckmark from "./GreenCheckmark";
 import { useParams } from "next/navigation";
-// ⬇️ UPDATE THIS PATH to wherever your Database module is:
-import * as db from "../../../Database";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { addModule, deleteModule, updateModule, editModule } from "./reducer";
+import type { RootState } from "../../../store";
 
 // ---- minimal types to satisfy ESLint/TS
 type Lesson = {
@@ -24,34 +29,127 @@ type Module = {
   description?: string;
   course: string;
   lessons?: Lesson[];
+  editing?: boolean;
 };
 
 export default function ModulesPage() {
   const { cid } = useParams<{ cid: string }>();
-  const modules = (db as { modules: Module[] }).modules;
+
+  // local input for the "+ Module" form
+  const [moduleName, setModuleName] = useState("");
+
+  // read from Redux
+  const modules = useSelector(
+    (state: RootState) => state.modulesReducer.modules
+  ) as Module[];
+
+  const { currentUser } = useSelector((s: RootState) => s.accountReducer);
+  const isFaculty = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
+
+  const dispatch = useDispatch();
+
+  // ---- Guarded handlers (no-ops for students)
+  const handleAdd = () => {
+    if (!isFaculty) return;
+    if (!moduleName.trim()) return;
+    dispatch(addModule({ name: moduleName.trim(), course: cid as string }));
+    setModuleName("");
+  };
+
+  const handleDelete = (moduleId: string) => {
+    if (!isFaculty) return;
+    dispatch(deleteModule(moduleId));
+  };
+
+  const handleEdit = (moduleId: string) => {
+    if (!isFaculty) return;
+    dispatch(editModule(moduleId));
+  };
+
+  const handleInlineNameChange = (m: Module, name: string) => {
+    if (!isFaculty) return;
+    dispatch(updateModule({ ...m, name }));
+  };
+
+  const handleInlineCommit = (m: Module) => {
+    if (!isFaculty) return;
+    dispatch(updateModule({ ...m, editing: false }));
+  };
 
   return (
     <div id="wd-modules-page">
-      <ModulesControls />
-      <br /><br /><br />
+      {/* Faculty-only toolbar to create modules */}
+      {isFaculty && (
+        <ModulesControls
+          moduleName={moduleName}
+          setModuleName={setModuleName}
+          addModule={handleAdd}
+        />
+      )}
+
+      <br />
+      <br />
+      <br />
+
       <ListGroup className="rounded-0" id="wd-modules">
-        {modules
+        {(modules ?? [])
           .filter((m) => m.course === cid)
           .map((m) => (
-            <ListGroupItem key={m._id} className="wd-module p-0 mb-5 fs-5 border-gray">
-              <div className="wd-title p-3 ps-2 bg-secondary">
+            <ListGroupItem
+              key={m._id}
+              className="wd-module p-0 mb-5 fs-5 border-gray"
+            >
+              <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-3" />
-                {m.name}
-                <ModuleControlButtons />
+
+                {/* Title / inline editor */}
+                <div className="flex-grow-1">
+                  {!m.editing && (
+                    <span className="me-2">{m.name}</span>
+                  )}
+
+                  {m.editing && isFaculty && (
+                    <FormControl
+                      className="w-50 d-inline-block me-2"
+                      defaultValue={m.name}
+                      onChange={(e) => handleInlineNameChange(m, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleInlineCommit(m);
+                      }}
+                    />
+                  )}
+
+                  {/* ✅ Always show module publish checkmark to all users */}
+                  <GreenCheckmark />
+                </div>
+
+                {/* Edit/Delete buttons only for faculty */}
+                {isFaculty && (
+                  <ModuleControlButtons
+                    moduleId={m._id}
+                    deleteModule={handleDelete}
+                    editModule={handleEdit}
+                  />
+                )}
               </div>
 
+              {/* Lessons list */}
               {m.lessons && (
                 <ListGroup className="wd-lessons rounded-0">
                   {m.lessons.map((lesson) => (
-                    <ListGroupItem key={lesson._id} className="wd-lesson p-3 ps-1">
+                    <ListGroupItem
+                      key={lesson._id}
+                      className="wd-lesson p-3 ps-1 d-flex align-items-center"
+                    >
                       <BsGripVertical className="me-2 fs-3" />
-                      {lesson.name}
-                      <LessonControlButtons />
+                      <span className="me-2 flex-grow-1">{lesson.name}</span>
+
+                      {/* ✅ Students must also see a green check mark for lessons.
+                          Show it here for students; faculty already have controls on the right. */}
+                      {!isFaculty && <GreenCheckmark />}
+
+                      {/* Faculty lesson controls (keep as-is) */}
+                      {isFaculty && <LessonControlButtons />}
                     </ListGroupItem>
                   ))}
                 </ListGroup>

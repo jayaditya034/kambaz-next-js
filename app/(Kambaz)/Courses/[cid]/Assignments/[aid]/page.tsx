@@ -1,112 +1,116 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { FaCalendarAlt } from "react-icons/fa";
-
-// ✅ Database import (extra "../" because we're one level deeper)
-import * as db from "../../../../Database";
-
-type Assignment = {
-  _id: string;
-  title: string;
-  course: string;
-  description?: string;
-  points?: number;
-  due?: string;         // e.g., "May 13, 2024, 11:59 PM"
-  availableFrom?: string;
-  available?: string;   // short banner string if you prefer
-};
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../../../store";
+import {
+  addAssignment,
+  updateAssignment,
+  type Assignment,
+} from "../../Assignments/reducer";
 
 export default function EditAssignmentPage() {
+  const router = useRouter();
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
-  const all = (db as { assignments: Assignment[] }).assignments || [];
-  const a = all.find((x) => x._id === aid);
 
-  // reasonable fallbacks so the UI still renders
-  const title = a?.title ?? aid ?? "Assignment";
-  const description =
-    a?.description ??
-    `The assignment is available online
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((s: RootState) => s.assignmentsReducer);
+  const { currentUser } = useSelector((s: RootState) => s.accountReducer);
 
-Submit a link to the landing page of your Web application running on Netlify.
+  // ✅ Count ADMIN as faculty too
+  const canEdit = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
-The landing page should include the following:
+  const existing = assignments.find((a) => a._id === aid);
+  const isNew = aid === "new" || !existing;
 
-• Your full name and section
-• Links to each of the lab assignments
-• Link to the Kanbas application
-• Links to all relevant source code repositories
+  // local controlled state
+  const a: Assignment = existing ?? {
+    _id: "",
+    course: cid!,
+    title: "New Assignment",
+    description: "",
+    points: 100,
+    due: "May 13, 2024, 11:59 PM",
+    availableFrom: "May 6, 2024, 12:00 AM",
+  };
 
-The Kanbas application should include a link to navigate back to the landing page.`;
-  const points = a?.points ?? 100;
-  const dueFull = a?.due ?? "May 13, 2024, 11:59 PM";
-  const availFrom = a?.availableFrom ?? "May 6, 2024, 12:00 AM";
+  const back = () => router.push(`/Courses/${cid}/Assignments`);
+
+  // ✅ Block students from creating new assignments via URL
+  useEffect(() => {
+    if (isNew && !canEdit) back();
+  }, [isNew, canEdit]);
+
+  const onSave = (form: HTMLFormElement) => {
+    const data = new FormData(form);
+    const next: Assignment = {
+      _id: a._id,
+      course: cid!,
+      title: String(data.get("title") ?? a.title),
+      description: String(data.get("description") ?? a.description ?? ""),
+      points: Number(data.get("points") ?? a.points ?? 100),
+      due: String(data.get("due") ?? a.due ?? ""),
+      availableFrom: String(data.get("availableFrom") ?? a.availableFrom ?? ""),
+    };
+    if (isNew) {
+      dispatch(addAssignment({ ...next, _id: undefined }));
+    } else {
+      dispatch(updateAssignment(next));
+    }
+    back();
+  };
 
   return (
-    <div id="wd-assignments-editor" className="container mt-4">
+    <form
+      id="wd-assignments-editor"
+      className="container mt-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (canEdit) onSave(e.currentTarget);
+      }}
+    >
       {/* Assignment name */}
       <div className="mb-3">
-        <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input id="wd-name" className="form-control" defaultValue={title} />
+        <label htmlFor="wd-name" className="form-label">
+          Assignment Name
+        </label>
+        <input
+          id="wd-name"
+          name="title"
+          className="form-control"
+          defaultValue={a.title}
+          disabled={!canEdit}
+        />
       </div>
 
       {/* Description */}
       <div className="mb-3">
-        <textarea id="wd-description" className="form-control" rows={10} defaultValue={description} />
+        <textarea
+          id="wd-description"
+          name="description"
+          className="form-control"
+          rows={10}
+          defaultValue={a.description ?? ""}
+          disabled={!canEdit}
+        />
       </div>
 
       {/* Points */}
       <div className="row mb-3">
-        <label htmlFor="wd-points" className="col-md-3 col-form-label text-end">Points</label>
+        <label htmlFor="wd-points" className="col-md-3 col-form-label text-end">
+          Points
+        </label>
         <div className="col-md-9">
-          <input id="wd-points" className="form-control" defaultValue={points} />
-        </div>
-      </div>
-
-      {/* Assignment Group */}
-      <div className="row mb-3">
-        <label htmlFor="wd-group" className="col-md-3 col-form-label text-end">Assignment Group</label>
-        <div className="col-md-9">
-          <select id="wd-group" className="form-select" defaultValue="ASSIGNMENTS">
-            <option>ASSIGNMENTS</option>
-            <option>QUIZZES</option>
-            <option>EXAMS</option>
-            <option>PROJECT</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Display Grade as */}
-      <div className="row mb-3">
-        <label htmlFor="wd-display-grade-as" className="col-md-3 col-form-label text-end">Display Grade as</label>
-        <div className="col-md-9">
-          <select id="wd-display-grade-as" className="form-select" defaultValue="Percentage">
-            <option>Percentage</option>
-            <option>Points</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Submission Type + Online Entry Options */}
-      <div className="row mb-3">
-        <label htmlFor="wd-submission-type" className="col-md-3 col-form-label text-end">Submission Type</label>
-        <div className="col-md-9">
-          <div className="border rounded p-3">
-            <select id="wd-submission-type" className="form-select mb-3" defaultValue="Online">
-              <option>Online</option>
-            </select>
-
-            <div>
-              <label className="form-label fw-bold">Online Entry Options</label>
-              {["Text Entry", "Website URL", "Media Recordings", "Student Annotation", "File Uploads"].map((label, i) => (
-                <div className="form-check" key={i}>
-                  <input type="checkbox" className="form-check-input" id={`wd-opt-${i}`} defaultChecked={label === "Website URL"} />
-                  <label htmlFor={`wd-opt-${i}`} className="form-check-label">{label}</label>
-                </div>
-              ))}
-            </div>
-          </div>
+          <input
+            id="wd-points"
+            name="points"
+            className="form-control"
+            defaultValue={a.points ?? 100}
+            disabled={!canEdit}
+          />
         </div>
       </div>
 
@@ -115,40 +119,61 @@ The Kanbas application should include a link to navigate back to the landing pag
         <label className="col-md-3 col-form-label text-end">Assign</label>
         <div className="col-md-9">
           <div className="border rounded p-3">
-            {/* Assign to */}
-            <div className="mb-3">
-              <label htmlFor="wd-assign-to" className="form-label">Assign to</label>
-              <div className="input-group">
-                <input id="wd-assign-to" className="form-control" defaultValue="Everyone" />
-                <button className="btn btn-outline-secondary" type="button" aria-label="remove">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-
             {/* Due */}
             <div className="mb-3">
-              <label htmlFor="wd-due-date" className="form-label">Due</label>
+              <label htmlFor="wd-due-date" className="form-label">
+                Due
+              </label>
               <div className="input-group">
-                <input type="text" id="wd-due-date" className="form-control" defaultValue={dueFull} />
-                <span className="input-group-text"><FaCalendarAlt /></span>
+                <input
+                  type="text"
+                  id="wd-due-date"
+                  name="due"
+                  className="form-control"
+                  defaultValue={a.due ?? ""}
+                  disabled={!canEdit}
+                />
+                <span className="input-group-text">
+                  <FaCalendarAlt />
+                </span>
               </div>
             </div>
 
             {/* Available from / Until */}
             <div className="row">
               <div className="col-md-6 mb-3">
-                <label htmlFor="wd-available-from" className="form-label">Available from</label>
+                <label htmlFor="wd-available-from" className="form-label">
+                  Available from
+                </label>
                 <div className="input-group">
-                  <input type="text" id="wd-available-from" className="form-control" defaultValue={availFrom} />
-                  <span className="input-group-text"><FaCalendarAlt /></span>
+                  <input
+                    type="text"
+                    id="wd-available-from"
+                    name="availableFrom"
+                    className="form-control"
+                    defaultValue={a.availableFrom ?? ""}
+                    disabled={!canEdit}
+                  />
+                  <span className="input-group-text">
+                    <FaCalendarAlt />
+                  </span>
                 </div>
               </div>
               <div className="col-md-6 mb-3">
-                <label htmlFor="wd-available-until" className="form-label">Until</label>
+                <label htmlFor="wd-available-until" className="form-label">
+                  Until
+                </label>
                 <div className="input-group">
-                  <input type="text" id="wd-available-until" className="form-control" defaultValue="" />
-                  <span className="input-group-text"><FaCalendarAlt /></span>
+                  <input
+                    type="text"
+                    id="wd-available-until"
+                    className="form-control"
+                    defaultValue=""
+                    disabled
+                  />
+                  <span className="input-group-text">
+                    <FaCalendarAlt />
+                  </span>
                 </div>
               </div>
             </div>
@@ -158,11 +183,13 @@ The Kanbas application should include a link to navigate back to the landing pag
 
       <hr />
 
-      {/* Footer actions (Cancel, Save) – navigate back to course assignments */}
+      {/* Footer actions */}
       <div className="d-flex justify-content-end">
-        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
-        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-danger">Save</Link>
+        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">
+          Cancel
+        </Link>
+        {canEdit && <button type="submit" className="btn btn-danger">Save</button>}
       </div>
-    </div>
+    </form>
   );
 }
