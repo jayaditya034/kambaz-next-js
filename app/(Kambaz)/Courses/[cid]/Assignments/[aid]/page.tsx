@@ -11,6 +11,8 @@ import {
   updateAssignment,
   type Assignment,
 } from "../../Assignments/reducer";
+import * as assignmentsClient from "../../Assignments/client";
+
 
 export default function EditAssignmentPage() {
   const router = useRouter();
@@ -44,7 +46,7 @@ export default function EditAssignmentPage() {
     if (isNew && !canEdit) back();
   }, [isNew, canEdit]);
 
-  const onSave = (form: HTMLFormElement) => {
+  const onSave = async (form: HTMLFormElement) => {
     const data = new FormData(form);
     const next: Assignment = {
       _id: a._id,
@@ -53,15 +55,24 @@ export default function EditAssignmentPage() {
       description: String(data.get("description") ?? a.description ?? ""),
       points: Number(data.get("points") ?? a.points ?? 100),
       due: String(data.get("due") ?? a.due ?? ""),
-      availableFrom: String(data.get("availableFrom") ?? a.availableFrom ?? ""),
+      availableFrom: String(
+        data.get("availableFrom") ?? a.availableFrom ?? ""
+      ),
     };
+
     if (isNew) {
-      dispatch(addAssignment({ ...next, _id: undefined }));
+      const created = await assignmentsClient.createAssignmentForCourse(
+        cid!,
+        next
+      );
+      dispatch(addAssignment(created));
     } else {
-      dispatch(updateAssignment(next));
+      const updated = await assignmentsClient.updateAssignmentOnServer(next);
+      dispatch(updateAssignment(updated));
     }
     back();
   };
+
 
   return (
     <form
@@ -69,8 +80,11 @@ export default function EditAssignmentPage() {
       className="container mt-4"
       onSubmit={(e) => {
         e.preventDefault();
-        if (canEdit) onSave(e.currentTarget);
+        if (canEdit) {
+          void onSave(e.currentTarget);
+        }
       }}
+
     >
       {/* Assignment name */}
       <div className="mb-3">

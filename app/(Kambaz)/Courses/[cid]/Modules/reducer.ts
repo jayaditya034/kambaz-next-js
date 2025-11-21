@@ -1,7 +1,5 @@
 // app/(Kambaz)/Courses/[cid]/Modules/reducer.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import * as db from "../../../Database";
-import { v4 as uuidv4 } from "uuid";
 
 // ---- Types
 type Lesson = {
@@ -24,9 +22,9 @@ type ModulesState = {
   modules: Module[];
 };
 
-// ---- Initial state (copied from Database)
+// ---- Initial state (now empty; server will populate it)
 const initialState: ModulesState = {
-  modules: (db.modules as unknown) as Module[],
+  modules: [],
 };
 
 // ---- Slice
@@ -34,18 +32,14 @@ const modulesSlice = createSlice({
   name: "modules",
   initialState,
   reducers: {
-    // payload: { name: string; course: string }
-    addModule: (
-      state,
-      { payload }: PayloadAction<{ name: string; course: string }>
-    ) => {
-      const newModule: Module = {
-        _id: uuidv4(),
-        name: payload.name,
-        course: payload.course,
-        lessons: [],
-      };
-      state.modules = [...state.modules, newModule];
+    // ✅ replace modules list with data from server
+    setModules: (state, action: PayloadAction<Module[]>) => {
+      state.modules = action.payload;
+    },
+
+    // ✅ now we append the module returned by the server
+    addModule: (state, { payload }: PayloadAction<Module>) => {
+      state.modules = [...state.modules, payload];
     },
 
     // payload: moduleId
@@ -60,7 +54,7 @@ const modulesSlice = createSlice({
       );
     },
 
-    // payload: moduleId -> toggles editing on (like the textbook)
+    // payload: moduleId -> toggles editing on
     editModule: (state, { payload }: PayloadAction<string>) => {
       state.modules = state.modules.map((m) =>
         m._id === payload ? { ...m, editing: true } : m
@@ -69,7 +63,12 @@ const modulesSlice = createSlice({
   },
 });
 
-export const { addModule, deleteModule, updateModule, editModule } =
-  modulesSlice.actions;
+export const {
+  setModules,
+  addModule,
+  deleteModule,
+  updateModule,
+  editModule,
+} = modulesSlice.actions;
 
 export default modulesSlice.reducer;

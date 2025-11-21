@@ -8,13 +8,16 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../store";
 import { setCurrentUser, type User } from "../reducer";
+import * as client from "../client";
 
 export default function Profile() {
   const router = useRouter();
   const dispatch = useDispatch();
 
   // ✅ get current user from Redux
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { currentUser } = useSelector(
+    (state: RootState) => state.accountReducer
+  );
 
   // ✅ local editable copy of the profile (per textbook)
   const [profile, setProfile] = useState<User | null>(null);
@@ -28,8 +31,15 @@ export default function Profile() {
     setProfile(currentUser);
   }, [currentUser, router]);
 
+  const updateProfile = async () => {
+    if (!profile) return;
+    const updatedProfile = await client.updateUser(profile);
+    dispatch(setCurrentUser(updatedProfile));
+  };
+
   // ✅ sign out: clear user and navigate to Signin
-  const signout = () => {
+  const signout = async () => {
+    await client.signout();
     dispatch(setCurrentUser(null));
     router.replace("/Account/Signin");
   };
@@ -89,7 +99,9 @@ export default function Profile() {
               id="wd-dob"
               type="date"
               value={profile.dob ?? ""}
-              onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, dob: e.target.value })
+              }
             />
           </Col>
         </Row>
@@ -121,6 +133,14 @@ export default function Profile() {
           <option value="FACULTY">Faculty</option>
           <option value="STUDENT">Student</option>
         </Form.Select>
+
+        <Button
+          id="wd-update-btn"
+          className="w-100 mb-2"
+          onClick={updateProfile}
+        >
+          Update
+        </Button>
 
         <Button
           id="wd-signout-btn"

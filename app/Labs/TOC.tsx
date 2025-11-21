@@ -69,6 +69,18 @@ export default function TOC() {
         </Nav.Link>
       </Nav.Item>
 
+            <Nav.Item>
+        <Nav.Link
+          as={Link}
+          href="/Labs/Lab5"
+          id="wd-lab5-link"
+          eventKey="/Labs/Lab5"
+          className={`nav-link ${pathname.endsWith("Lab5") ? "active" : ""}`}
+        >
+          Lab 5
+        </Nav.Link>
+      </Nav.Item>
+
       <Nav.Item>
         <Nav.Link as={Link} href="/" id="wd-kambaz-link" eventKey="/">
           Kambaz

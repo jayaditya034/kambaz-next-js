@@ -6,30 +6,53 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormControl, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { setCurrentUser, User } from "../reducer";
-import * as db from "../../Database";
+import axios from "axios";
+import { setCurrentUser, type User } from "../reducer";
+import * as client from "../client";
+import type { Credentials } from "../client";
 
 export default function Signin() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [username, setUsername] = useState<string>("Jay");
-  const [password, setPassword] = useState<string>("3399");
+  // default credentials
+  const [credentials, setCredentials] = useState<Credentials>({
+    username: "Jay",
+    password: "3399",
+  });
+
   const [error, setError] = useState<string | null>(null);
 
-  const onSignin = () => {
-    const users = db.users as unknown as User[];
-    const found = users.find(
-      (u) => u.username === username && u.password === password
-    );
+  const onSignin = async () => {
+    try {
+      const user = (await client.signin(credentials)) as User | null;
 
-    if (found) {
-      dispatch(setCurrentUser(found));
-      setError(null);
-      router.push("/Account/Profile"); // navigate after successful sign-in
-    } else {
+      if (user) {
+        dispatch(setCurrentUser(user));
+        setError(null);
+        router.push("/Account/Profile");
+      } else {
+        dispatch(setCurrentUser(null));
+        setError("Invalid username or password.");
+      }
+    } catch (err: unknown) {
+      // keep Redux state consistent
       dispatch(setCurrentUser(null));
-      setError("Invalid username or password.");
+
+      // 🔍 Detailed logging without using `any`
+      if (axios.isAxiosError(err)) {
+        console.error("Signin failed – Axios error:", {
+          message: err.message,
+          code: err.code,
+          url: err.config?.url,
+          status: err.response?.status,
+          data: err.response?.data,
+        });
+      } else {
+        console.error("Signin failed – non-Axios error:", err);
+      }
+
+      setError("Sign-in failed. Please try again.");
     }
   };
 
@@ -40,15 +63,19 @@ export default function Signin() {
       <FormControl
         placeholder="username"
         className="mb-2"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={credentials.username}
+        onChange={(e) =>
+          setCredentials({ ...credentials, username: e.target.value })
+        }
       />
       <FormControl
         placeholder="password"
         type="password"
         className="mb-3"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={credentials.password}
+        onChange={(e) =>
+          setCredentials({ ...credentials, password: e.target.value })
+        }
       />
 
       <Button id="wd-signin-btn" className="w-100 mb-2" onClick={onSignin}>

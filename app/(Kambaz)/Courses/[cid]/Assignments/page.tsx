@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Button,
@@ -15,7 +16,12 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus, FaRegCheckCircle, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../store";
-import { deleteAssignment, type Assignment } from "../Assignments/reducer";
+import {
+  deleteAssignment,
+  setAssignments,
+  type Assignment,
+} from "../Assignments/reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentsPage() {
   const router = useRouter();
@@ -29,9 +35,31 @@ export default function AssignmentsPage() {
   const { currentUser } = useSelector(
     (s: RootState) => s.accountReducer
   );
-  const isFaculty = currentUser?.role === "FACULTY"|| currentUser?.role === "ADMIN";
+  const isFaculty =
+    currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
-  const courseAssignments: Assignment[] = assignments.filter(a => a.course === cid);
+  const courseAssignments: Assignment[] = assignments.filter(
+    (a) => a.course === cid
+  );
+
+  // ✅ load assignments from server when cid changes
+  useEffect(() => {
+    if (!cid) return;
+    const load = async () => {
+      const data = await assignmentsClient.findAssignmentsForCourse(
+        cid as string
+      );
+      dispatch(setAssignments(data));
+    };
+    void load();
+  }, [cid, dispatch]);
+
+  const handleDelete = async (assignmentId: string) => {
+    const ok = window.confirm("Delete this assignment?");
+    if (!ok) return;
+    await assignmentsClient.deleteAssignmentOnServer(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
 
   return (
     <div id="wd-assignments" className="mt-2">
@@ -39,7 +67,9 @@ export default function AssignmentsPage() {
       <div className="clearfix mb-3">
         <div className="float-start" style={{ maxWidth: 420 }}>
           <InputGroup size="lg">
-            <InputGroup.Text><BiSearch /></InputGroup.Text>
+            <InputGroup.Text>
+              <BiSearch />
+            </InputGroup.Text>
             <FormControl placeholder="Search..." id="wd-search-assignment" />
           </InputGroup>
         </div>
@@ -68,9 +98,15 @@ export default function AssignmentsPage() {
           <h5 className="m-0">ASSIGNMENTS</h5>
         </div>
         <div className="d-flex align-items-center gap-2">
-          <Badge bg="light" text="dark" pill>40% of Total</Badge>
-          <Button size="sm" variant="light" className="px-2" disabled>+</Button>
-          <Button size="sm" variant="light" className="px-2"><IoEllipsisVertical /></Button>
+          <Badge bg="light" text="dark" pill>
+            40% of Total
+          </Badge>
+          <Button size="sm" variant="light" className="px-2" disabled>
+            +
+          </Button>
+          <Button size="sm" variant="light" className="px-2">
+            <IoEllipsisVertical />
+          </Button>
         </div>
       </div>
 
@@ -89,7 +125,9 @@ export default function AssignmentsPage() {
                 </Link>
                 <div className="small mt-1">
                   <span className="text-success me-3">Multiple Modules</span>
-                  <span className="text-muted">{a.available ?? "Available now"}</span>
+                  <span className="text-muted">
+                    {a.available ?? "Available now"}
+                  </span>
                   <span className="mx-2 text-muted">|</span>
                   <span className="text-muted">Due {a.due ?? "TBD"}</span>
                   <span className="mx-2 text-muted">|</span>
@@ -103,10 +141,7 @@ export default function AssignmentsPage() {
                   variant="link"
                   className="text-danger p-0 ms-2 flex-shrink-0"
                   title="Delete"
-                  onClick={() =>
-                    confirm("Delete this assignment?") &&
-                    dispatch(deleteAssignment({ _id: a._id }))
-                  }
+                  onClick={() => handleDelete(a._id)}
                 >
                   <FaTrash />
                 </Button>
