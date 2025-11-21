@@ -15,13 +15,28 @@ import {
   type Course,
 } from "../Courses/[cid]/reducer";
 
-import { enroll, unenroll, setEnrollments } from "../Enrollments/reducer";
+import {
+  enroll,
+  unenroll,
+  setEnrollments,
+} from "../Enrollments/reducer";
 import * as enrollmentClient from "../Enrollments/client";
 
 import * as courseClient from "../Courses/client";
 import * as userClient from "../Account/client";
 
 const thumbnails = [
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
+  "/images/react.js.png",
   "/images/react.js.png",
 ];
 
@@ -45,19 +60,26 @@ export default function Dashboard() {
   const isFaculty =
     currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
-  // false = show ONLY my enrolled courses (default)
-  // true  = show ALL courses (enrollment explorer view)
-  const [showAll, setShowAll] = useState<boolean>(false);
+  // Start by showing ALL courses for everyone
+  const [showAll, setShowAll] = useState<boolean>(true);
   const [touched, setTouched] = useState<boolean>(false);
 
-  const isEnrolled = (cid: string) =>
-    !!currentUser &&
-    enrollments.some((e) => e.user === currentUser._id && e.course === cid);
+  const isEnrolled = (cid: string): boolean => {
+    // Faculty are conceptually enrolled in all courses
+    if (isFaculty) return true;
+    if (!currentUser) return false;
+    return enrollments.some(
+      (e) => e.user === currentUser._id && e.course === cid
+    );
+  };
 
-  // Courses currently displayed on screen
-  const visibleCourses = !currentUser ? [] : courses;
+  const visibleCourses = !currentUser
+    ? []
+    : showAll
+    ? courses // All courses
+    : courses.filter((c) => isEnrolled(c._id)); // Only my enrollments
 
-  // Fetch courses whenever user or showAll changes
+  // Fetch courses from the server when user or toggle changes
   useEffect(() => {
     const fetchCourses = async () => {
       if (!currentUser) {
@@ -67,15 +89,9 @@ export default function Dashboard() {
       }
 
       try {
-        // When showAll is true -> ALL courses for everyone
-        if (showAll) {
-          const allCourses = await courseClient.fetchAllCourses();
-          dispatch(setCourses(allCourses));
-        } else {
-          // When showAll is false -> only "my" courses
-          const myCourses = await userClient.findMyCourses();
-          dispatch(setCourses(myCourses));
-        }
+        // Everyone's "All" view is just all courses from the server
+        const allCourses = await courseClient.fetchAllCourses();
+        dispatch(setCourses(allCourses));
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error("Failed to fetch courses:", err);
@@ -84,7 +100,7 @@ export default function Dashboard() {
     };
 
     void fetchCourses();
-  }, [currentUser, showAll, dispatch, router]);
+  }, [currentUser, dispatch, router]);
 
   // Fetch enrollments for the *current* user from the server
   useEffect(() => {
@@ -102,6 +118,7 @@ export default function Dashboard() {
       }
     };
 
+    // Faculty don't *need* enrollments, but it's harmless to load them
     void loadEnrollments();
   }, [currentUser, dispatch]);
 
@@ -122,6 +139,7 @@ export default function Dashboard() {
   };
 
   const onUpdate = async () => {
+    // Only update if this course actually exists in our list
     if (!courses.some((c) => c._id === draft._id)) {
       return;
     }
@@ -136,6 +154,7 @@ export default function Dashboard() {
   };
 
   if (!currentUser) {
+    // ProtectedRoute usually catches this, but guard anyway
     return null;
   }
 
@@ -151,17 +170,18 @@ export default function Dashboard() {
           onClick={() => {
             if (!touched) {
               setTouched(true);
+              setShowAll((v) => !v);
+            } else {
+              setShowAll((v) => !v);
             }
-            setShowAll((v) => !v);
           }}
           id="wd-toggle-enrollments"
         >
-          {/* When showing ALL courses, button says "Show My Enrollments" */}
           {!touched
             ? "Enrollments"
             : showAll
             ? "Show My Enrollments"
-            : "Enrollments"}
+            : "Show All Courses"}
         </button>
       </h1>
       <hr />
@@ -199,8 +219,9 @@ export default function Dashboard() {
 
       <hr />
       <h2 id="wd-dashboard-published">
-        {showAll ? "All Courses" : "My Enrolled Courses"} (
-        {visibleCourses.length})
+        {showAll
+          ? `All Courses (${visibleCourses.length})`
+          : `My Enrolled Courses (${visibleCourses.length})`}
       </h2>
       <hr />
 
@@ -239,7 +260,8 @@ export default function Dashboard() {
 
                       <Button variant="primary">Go</Button>
 
-                      {currentUser && (
+                      {/* Only STUDENTS see Enroll/Unenroll button */}
+                      {currentUser && !isFaculty && (
                         <button
                           className={`btn ${
                             enrolled ? "btn-danger" : "btn-success"
@@ -248,7 +270,6 @@ export default function Dashboard() {
                             e.preventDefault();
                             try {
                               if (enrolled) {
-                                // Unenroll on server + Redux
                                 await enrollmentClient.unenrollFromCourse(
                                   course._id
                                 );
@@ -258,16 +279,7 @@ export default function Dashboard() {
                                     course: course._id,
                                   })
                                 );
-                                // If we are in "My Enrolled Courses" view,
-                                // remove the course from the visible list.
-                                if (!showAll) {
-                                  const remaining = courses.filter(
-                                    (c) => c._id !== course._id
-                                  );
-                                  dispatch(setCourses(remaining));
-                                }
                               } else {
-                                // Enroll on server + Redux
                                 await enrollmentClient.enrollInCourse(
                                   course._id
                                 );
@@ -277,10 +289,6 @@ export default function Dashboard() {
                                     course: course._id,
                                   })
                                 );
-                                // No need to modify courses list here:
-                                // - in showAll view the card is already visible
-                                // - when we later switch to "My Enrolled Courses",
-                                //   useEffect will refetch my courses.
                               }
                             } catch (err) {
                               // eslint-disable-next-line no-console
