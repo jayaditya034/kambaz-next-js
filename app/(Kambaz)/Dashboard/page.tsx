@@ -15,11 +15,14 @@ import {
   type Course,
 } from "../Courses/[cid]/reducer";
 
-import { enroll, unenroll, setEnrollments } from "../Enrollments/reducer";
-import * as enrollmentClient from "../Enrollments/client";
+import {
+  enroll,
+  unenroll,
+  setEnrollments,
+  type Enrollment,
+} from "../Enrollments/reducer";
 
 import * as courseClient from "../Courses/client";
-import * as userClient from "../Account/client";
 
 const thumbnails = ["/images/react.js.png"];
 
@@ -52,10 +55,17 @@ export default function Dashboard() {
     !!currentUser &&
     enrollments.some((e) => e.user === currentUser._id && e.course === cid);
 
-  // Courses currently displayed on screen
-  const visibleCourses = !currentUser ? [] : courses;
+  // Courses currently displayed on screen:
+  // - ALL courses when showAll === true
+  // - ONLY enrolled courses when showAll === false
+  const visibleCourses: Course[] =
+    !currentUser || !Array.isArray(courses)
+      ? []
+      : showAll
+      ? courses
+      : courses.filter((c) => isEnrolled(c._id));
 
-  // Fetch courses whenever user or showAll changes
+
   useEffect(() => {
     const fetchCourses = async () => {
       if (!currentUser) {
@@ -65,17 +75,10 @@ export default function Dashboard() {
       }
 
       try {
-        if (showAll) {
-          // ALL courses
-          const allCourses = await courseClient.fetchAllCourses();
-          dispatch(setCourses(allCourses));
-        } else {
-          // ONLY my courses
-          const myCourses = await userClient.findMyCourses();
-          dispatch(setCourses(myCourses));
-        }
+        const allCourses = await courseClient.fetchAllCourses();
+        const normalized = Array.isArray(allCourses) ? allCourses : [];
+        dispatch(setCourses(normalized));
       } catch (err) {
-        // eslint-disable-next-line no-console
         console.error("Dashboard.fetchCourses: Failed to fetch courses:", err);
         dispatch(setCourses([]));
       }
@@ -84,7 +87,8 @@ export default function Dashboard() {
     void fetchCourses();
   }, [currentUser, showAll, dispatch, router]);
 
-  // Fetch enrollments for the *current* user from the server
+
+  // Fetch enrollments for the *current* user from MongoDB via courses
   useEffect(() => {
     const loadEnrollments = async () => {
       if (!currentUser) {
@@ -94,13 +98,20 @@ export default function Dashboard() {
       try {
         // eslint-disable-next-line no-console
         console.log(
-          "Dashboard.loadEnrollments: fetching my enrollments for user –",
-          `"${currentUser._id}"`
+          "Dashboard.loadEnrollments: fetching my enrollments (courses) for 'current'"
         );
-        const data = await enrollmentClient.fetchMyEnrollments(
-          currentUser._id
+        const myCourses = await courseClient.findCoursesForEnrolledUser(
+          "current"
         );
-        dispatch(setEnrollments(data));
+        const normalized = Array.isArray(myCourses) ? myCourses : [];
+
+        // Map courses -> enrollment records used by isEnrolled()
+        const enrollmentRecords: Enrollment[] = normalized.map((c) => ({
+          _id: `${currentUser._id}-${c._id}`,
+          user: currentUser._id,
+          course: c._id,
+        }));
+        dispatch(setEnrollments(enrollmentRecords));
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(
@@ -130,13 +141,18 @@ export default function Dashboard() {
   };
 
   const onUpdate = async () => {
+    if (!courses || !Array.isArray(courses)) {
+      return;
+    }
     if (!courses.some((c) => c._id === draft._id)) {
       return;
     }
 
     try {
-      const updated = await courseClient.updateCourse(draft);
-      dispatch(updateCourseAction(updated));
+      // Persist changes to MongoDB
+      await courseClient.updateCourse(draft);
+      // Update Redux with our local draft
+      dispatch(updateCourseAction(draft));
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error("Failed to update course on server:", err);
@@ -255,7 +271,8 @@ export default function Dashboard() {
                             e.preventDefault();
                             try {
                               if (enrolled) {
-                                await enrollmentClient.unenrollFromCourse(
+                                await courseClient.unenrollFromCourse(
+                                  "current",
                                   course._id
                                 );
                                 dispatch(
@@ -265,13 +282,14 @@ export default function Dashboard() {
                                   })
                                 );
                                 if (!showAll) {
-                                  const remaining = courses.filter(
+                                  const remaining = visibleCourses.filter(
                                     (c) => c._id !== course._id
                                   );
                                   dispatch(setCourses(remaining));
                                 }
                               } else {
-                                await enrollmentClient.enrollInCourse(
+                                await courseClient.enrollIntoCourse(
+                                  "current",
                                   course._id
                                 );
                                 dispatch(

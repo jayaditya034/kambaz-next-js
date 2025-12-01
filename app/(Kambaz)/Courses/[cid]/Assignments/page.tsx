@@ -1,3 +1,4 @@
+// app/(Kambaz)/Courses/[cid]/Assignments/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -42,7 +43,7 @@ export default function AssignmentsPage() {
     (a) => a.course === cid
   );
 
-  // ✅ load assignments from server when cid changes
+  // load assignments from server when cid changes
   useEffect(() => {
     if (!cid) return;
     const load = async () => {
@@ -112,8 +113,11 @@ export default function AssignmentsPage() {
 
       {/* Rows */}
       <ListGroup className="rounded-0 mt-2">
-        {courseAssignments.map((a) => (
-          <ListGroup.Item key={a._id} className="p-3 ps-1 wd-assignment-row">
+        {courseAssignments.map((a, index) => (
+          <ListGroup.Item
+            key={a._id || `assignment-${index}`} // ✅ unique key even if _id is ""
+            className="p-3 ps-1 wd-assignment-row"
+          >
             <div className="d-flex align-items-start">
               <BsGripVertical className="me-2 fs-5 text-muted flex-shrink-0" />
               <div className="flex-fill">

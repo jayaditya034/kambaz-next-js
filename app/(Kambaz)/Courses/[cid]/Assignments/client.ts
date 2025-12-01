@@ -16,8 +16,16 @@ export const findAssignmentsForCourse = async (
   const { data } = await axiosWithCredentials.get(
     `${COURSES_API}/${courseId}/assignments`
   );
-  return data as Assignment[];
+
+  // Normalize the id field so `_id` is always present and a string
+  const raw = data as unknown as Array<Record<string, unknown>>;
+
+  return raw.map((a) => ({
+    ...a,
+    _id: String(a._id ?? a.id ?? a.assignmentId ?? ""),
+  })) as Assignment[];
 };
+
 
 export const findAssignmentById = async (
   assignmentId: string

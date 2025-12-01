@@ -8,9 +8,9 @@ import Session from "./Account/Session";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Dashboard from "./Dashboard/page";
 
-import * as userClient from "./Account/client";
 import type { RootState } from "./store";
 import { setCourses, type Course } from "./Courses/[cid]/reducer";
+import * as courseClient from "./Courses/client";
 
 export default function KambazHome() {
   const dispatch = useDispatch();
@@ -27,12 +27,19 @@ export default function KambazHome() {
       }
 
       try {
-        // 🔹 Per-user courses from the server
-        const serverCourses = (await userClient.findMyCourses()) as Course[];
+        // ✅ Per-user courses from the new enrollments-backed endpoint
+        const serverCourses = await courseClient.findCoursesForEnrolledUser(
+          "current"
+        );
+
+        // ✅ Always work with an array
+        const list: Course[] = Array.isArray(serverCourses)
+          ? (serverCourses as Course[])
+          : [];
 
         // 🔹 De-duplicate by _id in case the server returns duplicates
         const byId = new Map<string, Course>();
-        for (const c of serverCourses) {
+        for (const c of list) {
           if (c && c._id) {
             byId.set(c._id, c);
           }

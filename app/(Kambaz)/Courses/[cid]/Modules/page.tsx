@@ -21,7 +21,6 @@ import {
 } from "./reducer";
 import type { RootState } from "../../../store";
 import * as coursesClient from "../../client";
-import * as modulesClient from "./client";
 
 
 // ---- minimal types to satisfy ESLint/TS
@@ -90,9 +89,10 @@ export default function ModulesPage() {
 
   const handleDelete = async (moduleId: string) => {
     if (!isFaculty) return;
-    await modulesClient.deleteModule(moduleId);
+    await coursesClient.deleteModule(cid as string, moduleId);
     dispatch(deleteModule(moduleId));
   };
+
 
 
   const handleEdit = (moduleId: string) => {
@@ -108,9 +108,10 @@ export default function ModulesPage() {
   const handleInlineCommit = async (m: Module) => {
     if (!isFaculty) return;
     const updated: Module = { ...m, editing: false };
-    await modulesClient.updateModule(updated);
-    dispatch(updateModule(updated));
+    const saved = await coursesClient.updateModule(cid as string, updated);
+    dispatch(updateModule(saved));
   };
+
 
 
   return (

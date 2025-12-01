@@ -1,7 +1,8 @@
+// app/(Kambaz)/Courses/[cid]/Assignments/[aid]/page.tsx
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { FaCalendarAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,56 +14,98 @@ import {
 } from "../../Assignments/reducer";
 import * as assignmentsClient from "../../Assignments/client";
 
-
 export default function EditAssignmentPage() {
   const router = useRouter();
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
 
   const dispatch = useDispatch();
-  const { assignments } = useSelector((s: RootState) => s.assignmentsReducer);
-  const { currentUser } = useSelector((s: RootState) => s.accountReducer);
+  const { assignments } = useSelector(
+    (s: RootState) => s.assignmentsReducer
+  );
+  const { currentUser } = useSelector(
+    (s: RootState) => s.accountReducer
+  );
 
-  // ✅ Count ADMIN as faculty too
-  const canEdit = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
+  const canEdit =
+    currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
-  const existing = assignments.find((a) => a._id === aid);
-  const isNew = aid === "new" || !existing;
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // local controlled state
-  const a: Assignment = existing ?? {
-    _id: "",
-    course: cid!,
-    title: "New Assignment",
-    description: "",
-    points: 100,
-    due: "May 13, 2024, 11:59 PM",
-    availableFrom: "May 6, 2024, 12:00 AM",
-  };
+  const isNewRoute = aid === "new";
 
   const back = () => router.push(`/Courses/${cid}/Assignments`);
 
-  // ✅ Block students from creating new assignments via URL
+  // Load the assignment:
+  //  - if aid === "new", create a local default
+  //  - else try Redux, then fall back to server fetch
   useEffect(() => {
-    if (isNew && !canEdit) back();
-  }, [isNew, canEdit]);
+    if (!cid || !aid) return;
 
-  const onSave = async (form: HTMLFormElement) => {
-    const data = new FormData(form);
-    const next: Assignment = {
-      _id: a._id,
-      course: cid!,
-      title: String(data.get("title") ?? a.title),
-      description: String(data.get("description") ?? a.description ?? ""),
-      points: Number(data.get("points") ?? a.points ?? 100),
-      due: String(data.get("due") ?? a.due ?? ""),
-      availableFrom: String(
-        data.get("availableFrom") ?? a.availableFrom ?? ""
-      ),
+    const load = async () => {
+      if (isNewRoute) {
+        const fresh: Assignment = {
+          _id: "",
+          course: cid,
+          title: "New Assignment",
+          description: "",
+          points: 100,
+          due: "May 13, 2024, 11:59 PM",
+          availableFrom: "May 6, 2024, 12:00 AM",
+        };
+        setAssignment(fresh);
+        setLoading(false);
+        return;
+      }
+
+      // 1) Try Redux state first
+      const fromState = assignments.find(
+        (a) => String(a._id) === String(aid)
+      );
+      if (fromState) {
+        setAssignment(fromState);
+        setLoading(false);
+        return;
+      }
+
+      // 2) Fall back to server
+      try {
+        const fetched = await assignmentsClient.findAssignmentById(aid);
+        setAssignment(fetched);
+        // keep Redux in sync
+        dispatch(addAssignment(fetched));
+      } catch (err) {
+        console.error("EditAssignmentPage: failed to load assignment", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (isNew) {
+    void load();
+  }, [cid, aid, isNewRoute, assignments, dispatch]);
+
+  const onSave = async (form: HTMLFormElement) => {
+    if (!cid || !assignment) return;
+
+    const data = new FormData(form);
+    const next: Assignment = {
+      _id: assignment._id ?? "",
+      course: cid,
+      title: String(data.get("title") ?? assignment.title),
+      description: String(
+        data.get("description") ?? assignment.description ?? ""
+      ),
+      points: Number(data.get("points") ?? assignment.points ?? 100),
+      due: String(data.get("due") ?? assignment.due ?? ""),
+      availableFrom: String(
+        data.get("availableFrom") ?? assignment.availableFrom ?? ""
+      ),
+      available: assignment.available,
+    };
+
+    if (isNewRoute) {
       const created = await assignmentsClient.createAssignmentForCourse(
-        cid!,
+        cid,
         next
       );
       dispatch(addAssignment(created));
@@ -73,6 +116,11 @@ export default function EditAssignmentPage() {
     back();
   };
 
+  if (loading || !assignment) {
+    return <div className="container mt-4">Loading assignment…</div>;
+  }
+
+  const pageTitle = assignment.title || "Assignment";
 
   return (
     <form
@@ -84,8 +132,9 @@ export default function EditAssignmentPage() {
           void onSave(e.currentTarget);
         }
       }}
-
     >
+      {/* (Breadcrumb in the layout will still say Web Development > ... ) */}
+
       {/* Assignment name */}
       <div className="mb-3">
         <label htmlFor="wd-name" className="form-label">
@@ -95,7 +144,7 @@ export default function EditAssignmentPage() {
           id="wd-name"
           name="title"
           className="form-control"
-          defaultValue={a.title}
+          defaultValue={pageTitle}
           disabled={!canEdit}
         />
       </div>
@@ -107,7 +156,7 @@ export default function EditAssignmentPage() {
           name="description"
           className="form-control"
           rows={10}
-          defaultValue={a.description ?? ""}
+          defaultValue={assignment.description ?? ""}
           disabled={!canEdit}
         />
       </div>
@@ -122,7 +171,7 @@ export default function EditAssignmentPage() {
             id="wd-points"
             name="points"
             className="form-control"
-            defaultValue={a.points ?? 100}
+            defaultValue={assignment.points ?? 100}
             disabled={!canEdit}
           />
         </div>
@@ -144,7 +193,7 @@ export default function EditAssignmentPage() {
                   id="wd-due-date"
                   name="due"
                   className="form-control"
-                  defaultValue={a.due ?? ""}
+                  defaultValue={assignment.due ?? ""}
                   disabled={!canEdit}
                 />
                 <span className="input-group-text">
@@ -165,7 +214,7 @@ export default function EditAssignmentPage() {
                     id="wd-available-from"
                     name="availableFrom"
                     className="form-control"
-                    defaultValue={a.availableFrom ?? ""}
+                    defaultValue={assignment.availableFrom ?? ""}
                     disabled={!canEdit}
                   />
                   <span className="input-group-text">
@@ -199,10 +248,15 @@ export default function EditAssignmentPage() {
 
       {/* Footer actions */}
       <div className="d-flex justify-content-end">
-        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">
+        <Link
+          href={`/Courses/${cid}/Assignments`}
+          className="btn btn-secondary me-2"
+        >
           Cancel
         </Link>
-        {canEdit && <button type="submit" className="btn btn-danger">Save</button>}
+        <button type="submit" className="btn btn-danger" disabled={!canEdit}>
+          Save
+        </button>
       </div>
     </form>
   );

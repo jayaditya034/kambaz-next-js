@@ -29,6 +29,9 @@ export default function PeopleTable({
   onUserDeleted,
   onUserUpdated,
 }: PeopleTableProps) {
+
+    console.log("PeopleTable: received users prop =", users);
+
   const displayUsers = users.filter(
     (u) => u.firstName && u.lastName
   );
