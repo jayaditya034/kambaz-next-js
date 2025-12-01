@@ -1,41 +1,46 @@
+// app/(Kambaz)/Courses/[cid]/People/Table/page.tsx
 "use client";
 
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import { useParams } from "next/navigation";
-import * as db from "../../../../Database"; // from .../Courses/[cid]/People/Table
+import Link from "next/link";
+import PeopleDetails from "../Details";
+import type { DetailedUser } from "../../../../Account/client";
 
-type User = {
-  _id: string;
-  firstName: string;
-  lastName: string;
+type PeopleUser = {
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
   loginId?: string;
   section?: string;
-  role?: string;           // "STUDENT" | "TA" | "FACULTY"
-  lastActivity?: string;   // e.g., "2025-10-04"
-  totalActivity?: string;  // e.g., "10:21:32"
+  role?: string;
+  lastActivity?: string;
+  totalActivity?: string;
 };
 
-type Enrollment = {
-  _id: string;
-  user: string;    // User._id
-  course: string;  // e.g., "CS5610"
+type PeopleTableProps = {
+  users?: PeopleUser[];
+  onUserDeleted?: (userId: string) => void;
+  onUserUpdated?: (user: DetailedUser) => void;
 };
 
-export default function PeopleTable() {
-  const { cid } = useParams<{ cid: string }>();
-
-  const { users, enrollments } = db as unknown as {
-    users: User[];
-    enrollments: Enrollment[];
-  };
-
-  const usersInCourse = (users ?? []).filter((u) =>
-    (enrollments ?? []).some((e) => e.user === u._id && e.course === cid)
+export default function PeopleTable({
+  users = [],
+  onUserDeleted,
+  onUserUpdated,
+}: PeopleTableProps) {
+  const displayUsers = users.filter(
+    (u) => u.firstName && u.lastName
   );
 
   return (
     <div id="wd-people-table">
+      {/* slide-out details drawer */}
+      <PeopleDetails
+        onUserDeleted={onUserDeleted}
+        onUserUpdated={onUserUpdated}
+      />
+
       <Table striped>
         <thead>
           <tr>
@@ -48,20 +53,38 @@ export default function PeopleTable() {
           </tr>
         </thead>
         <tbody>
-          {usersInCourse.map((user) => (
-            <tr key={user._id}>
-              <td className="wd-full-name text-nowrap">
-                <FaUserCircle className="me-2 fs-1 text-secondary" />
-                <span className="wd-first-name">{user.firstName}</span>{" "}
-                <span className="wd-last-name">{user.lastName}</span>
-              </td>
-              <td className="wd-login-id">{user.loginId ?? "-"}</td>
-              <td className="wd-section">{user.section ?? "-"}</td>
-              <td className="wd-role">{user.role ?? "STUDENT"}</td>
-              <td className="wd-last-activity">{user.lastActivity ?? "-"}</td>
-              <td className="wd-total-activity">{user.totalActivity ?? "-"}</td>
-            </tr>
-          ))}
+          {displayUsers.map((user) => {
+            const key =
+              user._id ?? `${user.firstName ?? ""} ${user.lastName ?? ""}`;
+
+            return (
+              <tr key={key}>
+                <td className="wd-full-name text-nowrap">
+                  <Link
+                    href={
+                      user._id
+                        ? `/Account/Users?uid=${user._id}`
+                        : "/Account/Users"
+                    }
+                    className="text-decoration-none"
+                  >
+                    <FaUserCircle className="me-2 fs-1 text-secondary" />
+                    <span className="wd-first-name">{user.firstName}</span>{" "}
+                    <span className="wd-last-name">{user.lastName}</span>
+                  </Link>
+                </td>
+                <td className="wd-login-id">{user.loginId ?? "-"}</td>
+                <td className="wd-section">{user.section ?? "-"}</td>
+                <td className="wd-role">{user.role ?? "USER"}</td>
+                <td className="wd-last-activity">
+                  {user.lastActivity ?? "-"}
+                </td>
+                <td className="wd-total-activity">
+                  {user.totalActivity ?? "-"}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </div>

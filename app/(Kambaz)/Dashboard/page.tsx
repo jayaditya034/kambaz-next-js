@@ -15,30 +15,13 @@ import {
   type Course,
 } from "../Courses/[cid]/reducer";
 
-import {
-  enroll,
-  unenroll,
-  setEnrollments,
-} from "../Enrollments/reducer";
+import { enroll, unenroll, setEnrollments } from "../Enrollments/reducer";
 import * as enrollmentClient from "../Enrollments/client";
 
 import * as courseClient from "../Courses/client";
 import * as userClient from "../Account/client";
 
-const thumbnails = [
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-  "/images/react.js.png",
-];
+const thumbnails = ["/images/react.js.png"];
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -60,26 +43,19 @@ export default function Dashboard() {
   const isFaculty =
     currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
-  // Start by showing ALL courses for everyone
-  const [showAll, setShowAll] = useState<boolean>(true);
+  // false = show ONLY my enrolled courses (default)
+  // true  = show ALL courses (enrollment explorer view)
+  const [showAll, setShowAll] = useState<boolean>(false);
   const [touched, setTouched] = useState<boolean>(false);
 
-  const isEnrolled = (cid: string): boolean => {
-    // Faculty are conceptually enrolled in all courses
-    if (isFaculty) return true;
-    if (!currentUser) return false;
-    return enrollments.some(
-      (e) => e.user === currentUser._id && e.course === cid
-    );
-  };
+  const isEnrolled = (cid: string) =>
+    !!currentUser &&
+    enrollments.some((e) => e.user === currentUser._id && e.course === cid);
 
-  const visibleCourses = !currentUser
-    ? []
-    : showAll
-    ? courses // All courses
-    : courses.filter((c) => isEnrolled(c._id)); // Only my enrollments
+  // Courses currently displayed on screen
+  const visibleCourses = !currentUser ? [] : courses;
 
-  // Fetch courses from the server when user or toggle changes
+  // Fetch courses whenever user or showAll changes
   useEffect(() => {
     const fetchCourses = async () => {
       if (!currentUser) {
@@ -89,18 +65,24 @@ export default function Dashboard() {
       }
 
       try {
-        // Everyone's "All" view is just all courses from the server
-        const allCourses = await courseClient.fetchAllCourses();
-        dispatch(setCourses(allCourses));
+        if (showAll) {
+          // ALL courses
+          const allCourses = await courseClient.fetchAllCourses();
+          dispatch(setCourses(allCourses));
+        } else {
+          // ONLY my courses
+          const myCourses = await userClient.findMyCourses();
+          dispatch(setCourses(myCourses));
+        }
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error("Failed to fetch courses:", err);
+        console.error("Dashboard.fetchCourses: Failed to fetch courses:", err);
         dispatch(setCourses([]));
       }
     };
 
     void fetchCourses();
-  }, [currentUser, dispatch, router]);
+  }, [currentUser, showAll, dispatch, router]);
 
   // Fetch enrollments for the *current* user from the server
   useEffect(() => {
@@ -110,15 +92,24 @@ export default function Dashboard() {
         return;
       }
       try {
-        const data = await enrollmentClient.fetchMyEnrollments();
+        // eslint-disable-next-line no-console
+        console.log(
+          "Dashboard.loadEnrollments: fetching my enrollments for user –",
+          `"${currentUser._id}"`
+        );
+        const data = await enrollmentClient.fetchMyEnrollments(
+          currentUser._id
+        );
         dispatch(setEnrollments(data));
       } catch (err) {
         // eslint-disable-next-line no-console
-        console.error("Failed to fetch enrollments:", err);
+        console.error(
+          "Dashboard.loadEnrollments: Failed to fetch enrollments:",
+          err
+        );
       }
     };
 
-    // Faculty don't *need* enrollments, but it's harmless to load them
     void loadEnrollments();
   }, [currentUser, dispatch]);
 
@@ -139,7 +130,6 @@ export default function Dashboard() {
   };
 
   const onUpdate = async () => {
-    // Only update if this course actually exists in our list
     if (!courses.some((c) => c._id === draft._id)) {
       return;
     }
@@ -154,7 +144,6 @@ export default function Dashboard() {
   };
 
   if (!currentUser) {
-    // ProtectedRoute usually catches this, but guard anyway
     return null;
   }
 
@@ -170,10 +159,8 @@ export default function Dashboard() {
           onClick={() => {
             if (!touched) {
               setTouched(true);
-              setShowAll((v) => !v);
-            } else {
-              setShowAll((v) => !v);
             }
+            setShowAll((v) => !v);
           }}
           id="wd-toggle-enrollments"
         >
@@ -181,7 +168,7 @@ export default function Dashboard() {
             ? "Enrollments"
             : showAll
             ? "Show My Enrollments"
-            : "Show All Courses"}
+            : "Enrollments"}
         </button>
       </h1>
       <hr />
@@ -219,9 +206,8 @@ export default function Dashboard() {
 
       <hr />
       <h2 id="wd-dashboard-published">
-        {showAll
-          ? `All Courses (${visibleCourses.length})`
-          : `My Enrolled Courses (${visibleCourses.length})`}
+        {showAll ? "All Courses" : "My Enrolled Courses"} (
+        {visibleCourses.length})
       </h2>
       <hr />
 
@@ -260,8 +246,7 @@ export default function Dashboard() {
 
                       <Button variant="primary">Go</Button>
 
-                      {/* Only STUDENTS see Enroll/Unenroll button */}
-                      {currentUser && !isFaculty && (
+                      {currentUser && (
                         <button
                           className={`btn ${
                             enrolled ? "btn-danger" : "btn-success"
@@ -279,6 +264,12 @@ export default function Dashboard() {
                                     course: course._id,
                                   })
                                 );
+                                if (!showAll) {
+                                  const remaining = courses.filter(
+                                    (c) => c._id !== course._id
+                                  );
+                                  dispatch(setCourses(remaining));
+                                }
                               } else {
                                 await enrollmentClient.enrollInCourse(
                                   course._id

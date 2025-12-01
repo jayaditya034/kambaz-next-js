@@ -28,6 +28,16 @@ export type NewUser = {
   password: string;
 };
 
+export type DetailedUser = User & {
+  loginId?: string;
+  section?: string;
+  lastActivity?: string;
+  totalActivity?: string;
+};
+
+export type NewDbUser = Omit<DetailedUser, "_id">;
+
+
 // --- API functions ---
 
 export const signin = async (
@@ -66,13 +76,16 @@ export const signout = async (): Promise<void> => {
   await axiosWithCredentials.post(`${USERS_API}/signout`);
 };
 
-export const updateUser = async (user: User): Promise<User> => {
+export const updateUser = async (
+  user: DetailedUser
+): Promise<DetailedUser> => {
   const response = await axiosWithCredentials.put(
     `${USERS_API}/${user._id}`,
     user
   );
-  return response.data as User;
+  return response.data as DetailedUser;
 };
+
 
 // ✅ Strongly typed, no `any`
 export const findMyCourses = async (): Promise<Course[]> => {
@@ -98,4 +111,46 @@ export const createCourse = async (course: Course): Promise<Course> => {
     course
   );
   return response.data as Course;
+};
+
+export const findAllUsers = async (): Promise<User[]> => {
+  const response = await axiosWithCredentials.get(USERS_API);
+  return response.data as User[];
+};
+
+export const findUserById = async (id: string): Promise<DetailedUser> => {
+  const response = await axiosWithCredentials.get(`${USERS_API}/${id}`);
+  return response.data as DetailedUser;
+};
+
+export const deleteUser = async (userId: string): Promise<void> => {
+  await axiosWithCredentials.delete(`${USERS_API}/${userId}`);
+};
+
+export const createUser = async (user: NewDbUser): Promise<DetailedUser> => {
+  const response = await axiosWithCredentials.post(USERS_API, user);
+  return response.data as DetailedUser;
+};
+
+
+/**
+ * 6.2.6.3 – filter users by role (client)
+ */
+export const findUsersByRole = async (role: string): Promise<User[]> => {
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}?role=${encodeURIComponent(role)}`
+  );
+  return response.data as User[];
+};
+
+/**
+ * 6.2.6.3 – filter users by partial first/last name (client)
+ */
+export const findUsersByPartialName = async (
+  name: string
+): Promise<User[]> => {
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}?name=${encodeURIComponent(name)}`
+  );
+  return response.data as User[];
 };

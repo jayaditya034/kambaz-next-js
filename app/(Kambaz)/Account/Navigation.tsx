@@ -7,20 +7,30 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
+type LinkLabel = "Signin" | "Signup" | "Profile" | "Users";
+
 export default function AccountNavigation() {
   const pathname = usePathname();
   const active = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+    pathname === href || pathname.startsWith(`${href}/`);
 
-  // ✅ textbook highlight: read currentUser to decide which links to show
+  // Read currentUser to decide which links to show
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer
   );
 
-  // ✅ if signed in → only Profile; otherwise → Signin & Signup
-  const links: Array<"Signin" | "Signup" | "Profile"> = currentUser
-    ? ["Profile"]
-    : ["Signin", "Signup"];
+  let links: LinkLabel[];
+
+  if (!currentUser) {
+    // Not signed in → Signin & Signup
+    links = ["Signin", "Signup"];
+  } else if (currentUser.role === "ADMIN") {
+    // Admin → Profile + Users
+    links = ["Profile", "Users"];
+  } else {
+    // Signed in, non-admin → Profile only
+    links = ["Profile"];
+  }
 
   return (
     <div id="wd-account-navigation" style={{ minWidth: 220 }}>
